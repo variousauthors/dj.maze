@@ -1,5 +1,6 @@
 require "entities"
 require "audio"
+require "maze"
 
 local time    = 0
 local score   = 0
@@ -18,8 +19,12 @@ local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local gameOver  = false
 local bgm
+local maze = Maze(3, 3)
 
 local debounce = false
+
+global = {}
+global.tile_size = 16
 
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
@@ -32,6 +37,8 @@ function love.draw()
     -- draw the dudes
     -- draw the goal
     -- draw the HUD
+    
+    maze.draw()
 
     if (gameOver) then
         -- draw the prompt
@@ -69,17 +76,17 @@ function love.update(dt)
         countdown = countdown - dt * 2
     end
 
-    if (player.getPower() > 0) then
-        score = time
+  --if (player.getPower() > 0) then
+  --    score = time
 
-        for i, orbiter in ipairs(orbiters) do
-            orbiter.update(dt, player)
-        end
+  --    for i, orbiter in ipairs(orbiters) do
+  --        orbiter.update(dt, player)
+  --    end
 
-        player.update(dt)
-    else
-        gameOver = true
-    end
+  --    player.update(dt)
+  --else
+  --    gameOver = true
+  --end
 end
 
 
