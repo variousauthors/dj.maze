@@ -2,6 +2,11 @@ require "entities"
 require "audio"
 require "maze"
 
+local i = require("vendor/inspect/inspect")
+inspect = function (a, b)
+    print(i.inspect(a, b))
+end
+
 local time    = 0
 local score   = 0
 
