@@ -1,4 +1,4 @@
-Djikstra!
+DJ.MAZE
 ========
 
 Playing with path algorithms in LOVE2D.
@@ -6,7 +6,7 @@ Playing with path algorithms in LOVE2D.
 ### Instructions
 
 If you need instructions to play a videogame, then you came to the right place!
-In Djikstra! you face off against an AI opponent in a race to the center of a
+In DJ.MAZE! you face off against an AI opponent in a race to the center of a
 diagonally symmetrical maze of squares! The controls are a little like Rogue.
 Warning: this game is extremely fair. The AI has no information that you don't
 have, and your moves are always evaluated first. What this means is, you should
@@ -21,6 +21,6 @@ You should just be able to download these and run them. Maybe on Linux you will 
 - [OSX-x86][1]
 - [WINDOWS][2]
 
-[0]: 
-[1]: 
-[2]: 
+[0]: http://example.com
+[1]: http://example.com
+[2]: http://example.com
