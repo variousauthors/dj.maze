@@ -29,6 +29,61 @@ Maze = function (width, height)
         end
     end
 
+    -- given an adjacency matrix A[][] returns a table
+    -- P containing the shortest path from nodes a to b
+    local shortestPath = function (adjacencies, a, b)
+        local visited, d = {}, {}
+
+        -- initialize the visited table
+        for i = 1, #adjacencies do
+            visited[i] = 0
+
+            -- initialize the edges coming from a
+            if adjacencies[a][i] > 0 then
+                d[i] = adjacencies[a][i]
+            end
+        end
+
+        visited[1] = 1
+
+        for i = 1, #adjacencies do
+            local v = nil
+
+            -- take the first unexplored node
+            local j = 1
+            while (v == nil and j <= #adjacencies) do
+                if visited[j] == 0 and d[j] ~= nil then
+                    v = j
+                end
+                j = j + 1
+            end
+
+            print(v)
+            if v ~= nil then
+                visited[v] = 1
+
+                -- adjust the distances of the other nodes
+                for j = 1, #adjacencies do
+                    -- for each unexplored node with an edge to v,
+                    -- if the distance from s to j is less than
+                    -- the distance from s to v plus the distance from
+                    -- v to j, then decrease the distance
+                    if visited[j] == 0 and adjacencies[v][j] > 0 then
+                        -- if there is an unexplored edge vj
+
+                        if d[j] == nil then
+                            d[j] = d[v] + adjacencies[v][j]
+                        elseif d[j] > d[v] + adjacencies[v][j] then
+                            d[j] = d[v] + adjacencies[v][j]
+                        end
+                    end
+                end
+            end
+        end
+
+        inspect(d)
+    end
+
     local init = function ()
         local rng = love.math.newRandomGenerator(os.time())
         structure, adjacencies = {}, {}
@@ -111,6 +166,8 @@ Maze = function (width, height)
             print(bob)
             bob = ""
         end
+
+        shortestPath(adjacencies, 1, height * width)
 
         return {
             draw = draw
