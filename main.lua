@@ -24,7 +24,7 @@ local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local gameOver  = false
 local bgm
-local maze = Maze(3, 3)
+local maze = Maze(16, 16)
 
 local debounce = false
 

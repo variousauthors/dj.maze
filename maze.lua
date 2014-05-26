@@ -1,6 +1,6 @@
 
 Maze = function (width, height)
-    local structure, adjacencies
+    local structure, adjacencies, distances
 
     local colors = {
         solid_color = { 200, 55, 55 },
@@ -58,7 +58,6 @@ Maze = function (width, height)
                 j = j + 1
             end
 
-            print(v)
             if v ~= nil then
                 visited[v] = 1
 
@@ -81,12 +80,13 @@ Maze = function (width, height)
             end
         end
 
-        inspect(d)
+        return d
     end
 
+    local rng = love.math.newRandomGenerator(os.time())
+
     local init = function ()
-        local rng = love.math.newRandomGenerator(os.time())
-        structure, adjacencies = {}, {}
+        structure, adjacencies, distances = {}, {}, {}
 
         for i = 1, height do
             structure[i] = {}
@@ -126,19 +126,16 @@ Maze = function (width, height)
         end
 
         -- initialize the adjacency matrix
-        print ("   1, 2, 3, 4, 5, 6, 7, 8, 9")
-        print ("   --------------------------")
         for i = 1, height * width do
             -- consider a tile
-            bob = "" .. i .. ": "
             adjacencies[i] = {}
 
             -- tile coords
-            local t_row, t_col = math.floor(((i - 1)/3) + 1), (i - 1)%3 + 1
+            local t_row, t_col = math.floor(((i - 1)/height) + 1), (i - 1)%width + 1
 
             for j = 1, height * width do
                 -- adjacency coords
-                local a_row, a_col = math.floor(((j - 1)/3) + 1), (j - 1)%3 + 1
+                local a_row, a_col = math.floor(((j - 1)/height) + 1), (j - 1)%width + 1
                 
                 -- if the tile is not solid, mark
                 if structure[t_row][t_col] == 0 then
@@ -151,28 +148,27 @@ Maze = function (width, height)
                         and isAdjacent(t_row, t_col, a_row, a_col)
                         then
 
-                        bob = bob .. "1, "
                         adjacencies[i][j] = 1
                     else
-                        bob = bob .. "0, "
                         adjacencies[i][j] = 0
                     end
                 else
-                    bob = bob .. "0, "
                     adjacencies[i][j] = 0
                 end
             end
-
-            print(bob)
-            bob = ""
         end
 
-        shortestPath(adjacencies, 1, height * width)
+        distances = shortestPath(adjacencies, 1, height * width)
 
         return {
             draw = draw
         }
     end
 
-    return init()
+    local obj = init()
+    while(shortestPath(adjacencies, 1, height*width)[height*width] == nil) do
+        obj = init()
+    end
+
+    return obj
 end
