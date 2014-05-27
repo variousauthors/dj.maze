@@ -96,12 +96,13 @@ Maze = function (x, y, width, height)
 
                         -- at every step we mark the edge j as having
                         -- been arrived at via v
-                        path[j] = v
 
                         if d[j] == nil then
                             d[j] = d[v] + adjacencies[v][j]
+                            path[j] = v
                         elseif d[j] > d[v] + adjacencies[v][j] then
                             d[j] = d[v] + adjacencies[v][j]
+                            path[j] = v
                         end
                     end
                 end
