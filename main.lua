@@ -1,3 +1,6 @@
+global = {}
+global.tile_size = 16
+
 require "player"
 require "audio"
 require "maze"
@@ -25,16 +28,13 @@ local countdown = 3.5
 local gameOver  = false
 local bgm
 local origin = Point(200, 200)
-local maze   = Maze(origin.getX(), origin.getY(), 10, 10)
+local maze   = Maze(origin.getX(), origin.getY(), 4, 4)
 
 local debounce = false
 
-global = {}
-global.tile_size = 16
-
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
-    player = Player(origin.getX(), origin.getY())
+    player = Player(maze.getPixelX(0), maze.getPixelY(0))
 
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end

@@ -2,8 +2,7 @@ require "vector"
 
 Player = function (x, y)
     local radius = global.tile_size / 3
-
-    p = Point(x, y)
+    local p = Point(x, y)
 
     local keypressed = function (key)
         if key == "down"      then p.setY(p.getY() + global.tile_size)

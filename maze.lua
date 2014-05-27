@@ -2,6 +2,19 @@
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
     local offset_x, offset_y = x, y
+    local enemy
+
+    local getPixelX = function (x)
+        return x * global.tile_size + offset_x
+    end
+
+    local getPixelY = function (y)
+        return y * global.tile_size + offset_y
+    end
+
+    local getNextMove = function ()
+
+    end
 
     local colors = {
         solid_color = { 200, 55, 55 },
@@ -28,6 +41,8 @@ Maze = function (x, y, width, height)
                 love.graphics.rectangle("fill", x + offset_x, y + offset_y, global.tile_size, global.tile_size)
             end
         end
+
+        enemy.draw()
     end
 
     -- given an adjacency matrix A[][] returns a table
@@ -167,15 +182,20 @@ Maze = function (x, y, width, height)
 
         path = shortestPath(adjacencies, 1, height * width)
 
+        inspect(path)
         return {
-            draw = draw
+            draw      = draw,
+            getPixelX = getPixelX,
+            getPixelY = getPixelY
         }
     end
 
     local obj = init()
-    while(shortestPath(adjacencies, 1, height*width)[height*width] == nil) do
+    while(path[width*height] == 1) do
         obj = init()
     end
+
+    enemy = Player(getPixelX(width - 1), getPixelY(height - 1))
 
     return obj
 end
