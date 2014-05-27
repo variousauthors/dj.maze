@@ -12,14 +12,20 @@ Maze = function (x, y, width, height)
         return y * global.tile_size + offset_y
     end
 
-    local getNextMove = function ()
-
+    local rowColFromIndex = function (index)
+        return math.floor(((index - 1)/height) + 1), (index - 1)%width + 1
     end
 
     local colors = {
         solid_color = { 200, 55, 55 },
         floor_color = { 35, 35, 35}
     }
+
+    local keypressed = function (key)
+        key = enemy.getNextMove()
+
+        enemy.keypressed(key)
+    end
 
     local draw = function ()
         for i = 1, height do
@@ -105,6 +111,33 @@ Maze = function (x, y, width, height)
         return path
     end
 
+    local instructionFromRowCol = function (frow, fcol, trow, tcol)
+        if     frow > trow then return "down"
+        elseif frow < trow then return "up"
+        elseif fcol > tcol then return "right"
+        elseif fcol < tcol then return "left"
+        end
+    end
+
+    -- starting at the end of the path build the reverse
+    -- path, and then reverse it
+    local moveListFromPath = function (path)
+        local move_list = {}
+        local index = width*height
+
+        while(index > 1) do
+            local from_row, from_col = rowColFromIndex(path[index])
+            local to_row, to_col     = rowColFromIndex(index)
+
+            local instruction = instructionFromRowCol(from_row, from_col, to_row, to_col)
+            table.insert(move_list, instruction)
+
+            index = path[index]
+        end
+
+        return move_list
+    end
+
     local rng = love.math.newRandomGenerator(os.time())
 
     local init = function ()
@@ -153,11 +186,11 @@ Maze = function (x, y, width, height)
             adjacencies[i] = {}
 
             -- tile coords
-            local t_row, t_col = math.floor(((i - 1)/height) + 1), (i - 1)%width + 1
+            local t_row, t_col = rowColFromIndex(i)
 
             for j = 1, height * width do
                 -- adjacency coords
-                local a_row, a_col = math.floor(((j - 1)/height) + 1), (j - 1)%width + 1
+                local a_row, a_col = rowColFromIndex(j)
                 
                 -- if the tile is not solid, mark
                 if structure[t_row][t_col] == 0 then
@@ -182,9 +215,9 @@ Maze = function (x, y, width, height)
 
         path = shortestPath(adjacencies, 1, height * width)
 
-        inspect(path)
         return {
             draw      = draw,
+            keypressed = keypressed,
             getPixelX = getPixelX,
             getPixelY = getPixelY
         }
@@ -195,7 +228,8 @@ Maze = function (x, y, width, height)
         obj = init()
     end
 
-    enemy = Player(getPixelX(width - 1), getPixelY(height - 1))
+    enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
+    enemy.setMoveList(moveListFromPath(path))
 
     return obj
 end

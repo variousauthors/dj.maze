@@ -31,3 +31,26 @@ Player = function (x, y)
         keypressed = keypressed
     }
 end
+
+Enemy = function (x, y)
+    -- the difference between player and AI is usually just
+    -- a matter of circumstance
+    local player = Player(x, y)
+    local next_move, move_list = 1
+
+    -- read the move list in reverse
+    player.getNextMove = function ()
+        local move = move_list[next_move]
+
+        next_move = next_move + 1
+
+        return move
+    end
+
+    player.setMoveList = function (list)
+        inspect(list)
+        move_list = list
+    end
+
+    return player
+end

@@ -28,7 +28,7 @@ local countdown = 3.5
 local gameOver  = false
 local bgm
 local origin = Point(200, 200)
-local maze   = Maze(origin.getX(), origin.getY(), 4, 4)
+local maze   = Maze(origin.getX(), origin.getY(), 10, 10)
 
 local debounce = false
 
@@ -41,6 +41,7 @@ end
 
 function love.keypressed(key)
     player.keypressed(key)
+    maze.keypressed(key)
 end
 
 function love.draw()
