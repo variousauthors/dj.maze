@@ -1,6 +1,7 @@
 
-Maze = function (width, height)
+Maze = function (x, y, width, height)
     local structure, adjacencies, distances
+    local offset_x, offset_y = x, y
 
     local colors = {
         solid_color = { 200, 55, 55 },
@@ -21,10 +22,10 @@ Maze = function (width, height)
                     love.graphics.setColor(colors.solid_color)
                 end
 
-                local x = col * global.tile_size
-                local y = row * global.tile_size
+                local x = (col - 1) * global.tile_size
+                local y = (row - 1) * global.tile_size
 
-                love.graphics.rectangle("fill", x, y, global.tile_size, global.tile_size)
+                love.graphics.rectangle("fill", x + offset_x, y + offset_y, global.tile_size, global.tile_size)
             end
         end
     end

@@ -1,4 +1,4 @@
-require "entities"
+require "player"
 require "audio"
 require "maze"
 
@@ -24,7 +24,8 @@ local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local gameOver  = false
 local bgm
-local maze = Maze(16, 16)
+local origin = Point(200, 200)
+local maze   = Maze(origin.getX(), origin.getY(), 10, 10)
 
 local debounce = false
 
@@ -33,8 +34,13 @@ global.tile_size = 16
 
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
+    player = Player(origin.getX(), origin.getY())
 
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
+end
+
+function love.keypressed(key)
+    player.keypressed(key)
 end
 
 function love.draw()
@@ -44,6 +50,7 @@ function love.draw()
     -- draw the HUD
     
     maze.draw()
+    player.draw()
 
     if (gameOver) then
         -- draw the prompt
@@ -81,17 +88,7 @@ function love.update(dt)
         countdown = countdown - dt * 2
     end
 
-  --if (player.getPower() > 0) then
-  --    score = time
-
-  --    for i, orbiter in ipairs(orbiters) do
-  --        orbiter.update(dt, player)
-  --    end
-
-  --    player.update(dt)
-  --else
-  --    gameOver = true
-  --end
+    player.update()
 end
 
 
