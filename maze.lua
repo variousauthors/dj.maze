@@ -1,6 +1,6 @@
 
 Maze = function (x, y, width, height)
-    local structure, adjacencies, distances
+    local structure, adjacencies, path
     local offset_x, offset_y = x, y
 
     local colors = {
@@ -34,10 +34,12 @@ Maze = function (x, y, width, height)
     -- P containing the shortest path from nodes a to b
     local shortestPath = function (adjacencies, a, b)
         local visited, d = {}, {}
+        local path = {}
 
         -- initialize the visited table
         for i = 1, #adjacencies do
             visited[i] = 0
+            path[i] = a
 
             -- initialize the edges coming from a
             if adjacencies[a][i] > 0 then
@@ -71,6 +73,10 @@ Maze = function (x, y, width, height)
                     if visited[j] == 0 and adjacencies[v][j] > 0 then
                         -- if there is an unexplored edge vj
 
+                        -- at every step we mark the edge j as having
+                        -- been arrived at via v
+                        path[j] = v
+
                         if d[j] == nil then
                             d[j] = d[v] + adjacencies[v][j]
                         elseif d[j] > d[v] + adjacencies[v][j] then
@@ -81,13 +87,13 @@ Maze = function (x, y, width, height)
             end
         end
 
-        return d
+        return path
     end
 
     local rng = love.math.newRandomGenerator(os.time())
 
     local init = function ()
-        structure, adjacencies, distances = {}, {}, {}
+        structure, adjacencies = {}, {}
 
         for i = 1, height do
             structure[i] = {}
@@ -159,7 +165,7 @@ Maze = function (x, y, width, height)
             end
         end
 
-        distances = shortestPath(adjacencies, 1, height * width)
+        path = shortestPath(adjacencies, 1, height * width)
 
         return {
             draw = draw
