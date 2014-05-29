@@ -276,7 +276,6 @@ Maze = function (x, y, width, height)
         height          = #table*2 - 1
         width           = #table[1]
 
-        inspect(table)
         -- either copy into the beginning of the table
         -- or copy from the middle of the table
         -- this is an offset from the index into the structure
@@ -301,21 +300,58 @@ Maze = function (x, y, width, height)
             structure[index] = table[#table - i]
         end
 
-        for k, v in ipairs(structure) do
-            inspect(v)
-            inspect(k)
+        return structure
+    end
+
+    local axialMirrorCols = function (table, direction)
+        local structure = {}
+        local middle    = #table[1] -- the middle index of the new table
+        -- reset the dimensions
+        height          = #table
+        width           = #table[1]*2 - 1
+
+        -- either copy into the beginning of the table
+        -- or copy from the middle of the table
+        -- this is an offset from the index into the structure
+        if direction == "left" then
+            start_offset = middle - 1
+        else
+            start_offset = 0
+        end
+
+        -- copy each col of the old table into the structure
+        for i = 1, middle do
+            local col_index = i + start_offset
+
+
+            -- copy the col value of each row
+            for j = 1, #table do
+                if structure[j] == nil then structure[j] = {} end
+
+                structure[j][col_index] = table[j][i]
+            end
+        end
+
+        for i = 1, middle - 1 do
+            local skip = 0
+            if start_offset ~= 0 then skip = 1 end
+            local col_index = i + (middle - start_offset - skip)
+
+            --structure[col_index] = table[#table - i]
+            -- copy the col value of each row
+            for j = 1, #table do
+                structure[j][col_index] = table[j][#table[1] - i]
+            end
         end
 
         return structure
     end
 
-    local axialMirrorCols = function (table, direction)
-    end
+    -- take the quarter sized board and reflect it
+    structure = axialMirrorRows(structure, "up")
+    structure = axialMirrorCols(structure, "left")
 
-    structure = axialMirrorRows(structure, "down")
-    structure = axialMirrorCols(structure, "down")
     -- after mirroring, the AI's starting position must be changed to the new corner
-    axialMirrorCols(structure, "right")
 
     return obj
 end
