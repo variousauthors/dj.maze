@@ -38,15 +38,11 @@ Maze = function (x, y, width, height)
         local moved = true
 
         player.keypressed(key)
-        inspect({ getTileX(player.getX()), getTileY(player.getY()) })
 
         if offset_x > player.getX() or player.getX() > pixel_width              then moved = false
         elseif offset_y > player.getY() or player.getY() > pixel_height         then moved = false
         elseif structure[getTileY(player.getY())][getTileX(player.getX())] == 1 then moved = false
         end
-
-        inspect(structure)
-        inspect(structure[0])
 
         if moved == false then
             player.setX(old_x)
@@ -267,6 +263,59 @@ Maze = function (x, y, width, height)
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
+
+    -- create a new table with n + n - 1 rows
+    -- copy the existing table into the top or bottom
+    -- of the new table (based on direction)
+    -- then copy the mirror image of the existing
+    -- table into the rest of the table
+    local axialMirrorRows = function (table, direction)
+        local structure = {}
+        local middle    = #table -- the middle index of the new table
+        -- reset the dimensions
+        height          = #table*2 - 1
+        width           = #table[1]
+
+        inspect(table)
+        -- either copy into the beginning of the table
+        -- or copy from the middle of the table
+        -- this is an offset from the index into the structure
+        if direction == "up" then
+            start_offset = middle - 1
+        else
+            start_offset = 0
+        end
+
+        -- copy each row of the old table into the structure
+        for i = 1, #table do
+            local index = i + start_offset
+
+            structure[index] = table[i]
+        end
+
+        for i = 1, middle - 1 do
+            local skip = 0
+            if start_offset ~= 0 then skip = 1 end
+            local index = i + (middle - start_offset - skip)
+
+            structure[index] = table[#table - i]
+        end
+
+        for k, v in ipairs(structure) do
+            inspect(v)
+            inspect(k)
+        end
+
+        return structure
+    end
+
+    local axialMirrorCols = function (table, direction)
+    end
+
+    structure = axialMirrorRows(structure, "down")
+    structure = axialMirrorCols(structure, "down")
+    -- after mirroring, the AI's starting position must be changed to the new corner
+    axialMirrorCols(structure, "right")
 
     return obj
 end

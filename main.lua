@@ -28,7 +28,8 @@ local countdown = 3.5
 local gameOver  = false
 local bgm
 local origin = Point(200, 200)
-local maze   = Maze(origin.getX(), origin.getY(), 10, 10)
+local maze_d = 10
+local maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
 
 local debounce = false
 
@@ -65,6 +66,9 @@ function love.keyreleased(key)
     -- press space to give up
     if (key == " ") then
         gameOver  = false
+
+        maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
+        player = Player(maze.getPixelX(0), maze.getPixelY(0))
         --love.audio.stop(bgm)
         --love.audio.play(bgm)
     end

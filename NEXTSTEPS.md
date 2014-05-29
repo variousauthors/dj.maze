@@ -6,9 +6,9 @@ NEXTSTEPS
 [x] generate the corresponding adjacencies
 [x] test that a path exists from corner to corner
 [ ] mirror the map (there must be overlap between the mirrors...)
-[ ] use the adjacency matrix to get the shortest path to the middle
+[x] use the adjacency matrix to get the shortest path to the middle
 [x] implement rogue-like movement with the AI moving randomly
-[ ] implement collision with walls
+[x] implement collision with walls
 [x] add the shortest path algorithm to the AI
 [ ] victory to the fellow at the center!
 [ ] add the colours and striped score bar
