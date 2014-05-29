@@ -26,6 +26,8 @@ Player = function (x, y)
     return {
         getX       = p.getX,
         getY       = p.getY,
+        setX       = p.setX,
+        setY       = p.setY,
         update     = update,
         draw       = draw,
         keypressed = keypressed

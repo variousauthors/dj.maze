@@ -40,8 +40,7 @@ function love.load()
 end
 
 function love.keypressed(key)
-    player.keypressed(key)
-    maze.keypressed(key)
+    maze.keypressed(key, player)
 end
 
 function love.draw()
@@ -52,13 +51,6 @@ function love.draw()
     
     maze.draw()
     player.draw()
-
-    if (gameOver) then
-        -- draw the prompt
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.setFont(SPACE_FONT)
-        love.graphics.printf("press space", -10, W_HEIGHT / 2 - 175, W_WIDTH, "center")
-    end
 end
 
 function love.focus(f) gameIsPaused = not f end
@@ -73,8 +65,8 @@ function love.keyreleased(key)
     -- press space to give up
     if (key == " ") then
         gameOver  = false
-        love.audio.stop(bgm)
-        love.audio.play(bgm)
+        --love.audio.stop(bgm)
+        --love.audio.play(bgm)
     end
 end
 

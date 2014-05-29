@@ -2,6 +2,8 @@
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
     local offset_x, offset_y = x, y
+    local pixel_width  = offset_x + (width - 1)  * global.tile_size
+    local pixel_height = offset_y + (height - 1) * global.tile_size
     local enemy
 
     local getPixelX = function (x)
@@ -10,6 +12,14 @@ Maze = function (x, y, width, height)
 
     local getPixelY = function (y)
         return y * global.tile_size + offset_y
+    end
+
+    local getTileX = function (x)
+        return math.floor((x - offset_x) / global.tile_size) + 1
+    end
+
+    local getTileY = function (y)
+        return math.floor((y - offset_y) / global.tile_size) + 1
     end
 
     local rowColFromIndex = function (index)
@@ -21,9 +31,35 @@ Maze = function (x, y, width, height)
         floor_color = { 35, 35, 35}
     }
 
-    local keypressed = function (key)
-        key = enemy.getNextMove()
+    -- offset_x < player.getX() < offset_x + width * global.tile_size
+    local tryMove = function (player, key)
+        local old_x = player.getX()
+        local old_y = player.getY()
+        local moved = true
 
+        player.keypressed(key)
+        inspect({ getTileX(player.getX()), getTileY(player.getY()) })
+
+        if offset_x > player.getX() or player.getX() > pixel_width              then moved = false
+        elseif offset_y > player.getY() or player.getY() > pixel_height         then moved = false
+        elseif structure[getTileY(player.getY())][getTileX(player.getX())] == 1 then moved = false
+        end
+
+        inspect(structure)
+        inspect(structure[0])
+
+        if moved == false then
+            player.setX(old_x)
+            player.setY(old_y)
+        end
+
+        return moved
+    end
+
+    local keypressed = function (key, player)
+        if not tryMove(player, key) then return end
+
+        key = enemy.getNextMove()
         enemy.keypressed(key)
     end
 
