@@ -297,7 +297,9 @@ Maze = function (x, y, width, height)
             if start_offset ~= 0 then skip = 1 end
             local index = i + (middle - start_offset - skip)
 
-            structure[index] = table[#table - i]
+            inspect({ index, #table - i })
+
+            structure[index] = table[#table - i + 1]
         end
 
         return structure
@@ -340,7 +342,7 @@ Maze = function (x, y, width, height)
             --structure[col_index] = table[#table - i]
             -- copy the col value of each row
             for j = 1, #table do
-                structure[j][col_index] = table[j][#table[1] - i]
+                structure[j][col_index] = table[j][#table[1] - i + 1]
             end
         end
 
@@ -352,6 +354,11 @@ Maze = function (x, y, width, height)
     structure = axialMirrorCols(structure, "left")
 
     -- after mirroring, the AI's starting position must be changed to the new corner
+    enemy.setX(getPixelX(width - 1))
+    enemy.setY(getPixelY(height - 1))
+
+    pixel_width  = offset_x + (width - 1)  * global.tile_size
+    pixel_height = offset_y + (height - 1) * global.tile_size
 
     return obj
 end
