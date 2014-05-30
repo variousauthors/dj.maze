@@ -5,8 +5,9 @@ local BLUE  = { 55, 55, 200 }
 
 Player = function (x, y)
     local radius = global.tile_size / 3
-    local color = RED
-    local p = Point(x, y)
+    local color  = RED
+    local p      = Point(x, y)
+    local message = ""
 
     local keypressed = function (key)
         if key == "down"      then p.setY(p.getY() + global.tile_size)
@@ -24,8 +25,20 @@ Player = function (x, y)
         love.graphics.setColor({ r, g, b })
     end
 
+    local setMessage = function (msg)
+        message = msg
+    end
+
+    local getMessage = function ()
+        return message
+    end
+
     local setColor = function (c)
         color = c
+    end
+
+    local getColor = function (c)
+        return color
     end
 
     return {
@@ -34,6 +47,9 @@ Player = function (x, y)
         setX       = p.setX,
         setY       = p.setY,
         setColor   = setColor,
+        getColor   = getColor,
+        setMessage = setMessage,
+        getMessage = getMessage,
         update     = update,
         draw       = draw,
         keypressed = keypressed

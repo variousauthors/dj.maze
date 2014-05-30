@@ -4,6 +4,7 @@ global.tile_size = 16
 require "player"
 require "audio"
 require "maze"
+require "score_stripe"
 
 local i = require("vendor/inspect/inspect")
 inspect = function (a, b)
@@ -28,14 +29,21 @@ local countdown = 3.5
 local gameOver  = false
 local bgm
 local origin = Point(200, 200)
-local maze_d = 10
-local maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
+local maze_d, maze = 10
+local score_band
 
 local debounce = false
 
+local init = function ()
+    maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
+    player = Player(maze.getPixelX(0), maze.getPixelY(0))
+    player.setMessage("YOU WIN")
+end
+
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
-    player = Player(maze.getPixelX(0), maze.getPixelY(0))
+    init()
+    score_band = ScoreBand()
 
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
@@ -52,12 +60,13 @@ function love.draw()
     
     maze.draw()
     player.draw()
+    score_band.draw()
 
     if (maze.getWinner() ~= nil) then
         -- draw the prompt
         love.graphics.setColor(255, 255, 255)
         love.graphics.setFont(SPACE_FONT)
-        love.graphics.printf("press space", -10, W_HEIGHT / 2 - 175, W_WIDTH, "center")
+        love.graphics.printf(maze.getWinner().getMessage(), -10, W_HEIGHT / 2 - 175, W_WIDTH, "center")
     end
 end
 
@@ -74,14 +83,14 @@ function love.keyreleased(key)
     if (key == " ") then
         gameOver  = false
 
-        maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
-        player = Player(maze.getPixelX(0), maze.getPixelY(0))
+        init()
         --love.audio.stop(bgm)
         --love.audio.play(bgm)
     end
 end
 
 function love.update(dt)
+    if maze.getWinner() ~= nil then return end
     if gameIsPaused then return end
 
     love.audio.update()
@@ -94,6 +103,9 @@ function love.update(dt)
 
     maze.update()
 
+    if (maze.getWinner() ~= nil) then
+        score_band.addStripe(maze.getWinner().getColor())
+    end
 end
 
 
