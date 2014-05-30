@@ -4,7 +4,7 @@ Maze = function (x, y, width, height)
     local offset_x, offset_y = x, y
     local pixel_width  = offset_x + (width - 1)  * global.tile_size
     local pixel_height = offset_y + (height - 1) * global.tile_size
-    local enemy
+    local enemy, goal, winner
 
     local getPixelX = function (x)
         return x * global.tile_size + offset_x
@@ -28,7 +28,8 @@ Maze = function (x, y, width, height)
 
     local colors = {
         solid_color = { 200, 55, 55 },
-        floor_color = { 35, 35, 35}
+        floor_color = { 35, 35, 35},
+        goal_color  = { 55, 200, 55 }
     }
 
     -- offset_x < player.getX() < offset_x + width * global.tile_size
@@ -52,11 +53,27 @@ Maze = function (x, y, width, height)
         return moved
     end
 
+    -- only move the enemy if the player moved
     local keypressed = function (key, player)
         if not tryMove(player, key) then return end
 
-        key = enemy.getNextMove()
         enemy.keypressed(key)
+    end
+
+    local getWinner = function ()
+        return winner
+    end
+
+    local update = function ()
+        local goal_x = goal.getX() * global.tile_size + offset_x
+        local goal_y = goal.getY() * global.tile_size + offset_y
+
+        if player.getX() == goal_x and player.getY() == goal_y then
+            winner = player
+        elseif enemy.getX() == goal_x and enemy.getY() == goal_y then
+            print("in")
+            winner = enemy
+        end
     end
 
     local draw = function ()
@@ -67,11 +84,11 @@ Maze = function (x, y, width, height)
                 col = j-- reversing the index, 3 downto 1
 
                 local solid = structure[row][col] == 1
+                local goal  = structure[row][col] == 2
 
                 love.graphics.setColor(colors.floor_color)
-                if solid then
-                    love.graphics.setColor(colors.solid_color)
-                end
+                if solid then love.graphics.setColor(colors.solid_color) end
+                if goal  then love.graphics.setColor(colors.goal_color) end
 
                 local x = (col - 1) * global.tile_size
                 local y = (row - 1) * global.tile_size
@@ -249,10 +266,12 @@ Maze = function (x, y, width, height)
         path = shortestPath(adjacencies, 1, height * width)
 
         return {
-            draw      = draw,
+            draw       = draw,
+            update     = update,
             keypressed = keypressed,
-            getPixelX = getPixelX,
-            getPixelY = getPixelY
+            getPixelX  = getPixelX,
+            getPixelY  = getPixelY,
+            getWinner  = getWinner
         }
     end
 
@@ -359,6 +378,9 @@ Maze = function (x, y, width, height)
 
     pixel_width  = offset_x + (width - 1)  * global.tile_size
     pixel_height = offset_y + (height - 1) * global.tile_size
+
+    goal = Point(math.floor(width / 2), math.floor(height / 2))
+    structure[goal.getX() + 1][goal.getY() + 1] = 2
 
     return obj
 end

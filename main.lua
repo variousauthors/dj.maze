@@ -52,6 +52,13 @@ function love.draw()
     
     maze.draw()
     player.draw()
+
+    if (maze.getWinner() ~= nil) then
+        -- draw the prompt
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setFont(SPACE_FONT)
+        love.graphics.printf("press space", -10, W_HEIGHT / 2 - 175, W_WIDTH, "center")
+    end
 end
 
 function love.focus(f) gameIsPaused = not f end
@@ -85,7 +92,8 @@ function love.update(dt)
         countdown = countdown - dt * 2
     end
 
-    player.update()
+    maze.update()
+
 end
 
 
