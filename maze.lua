@@ -196,8 +196,14 @@ Maze = function (x, y, width, height)
         for i = 1, height do
             structure[i] = {}
 
+            -- try weight inversely proportional to
+            -- product of indices
+            local max = height*width
             for j = 1, width do
-                structure[i][j] = rng:random(0, 1)
+                local weight = i*j
+                local n = weight/max
+                print(n)
+                structure[i][j] = math.round(n)
             end
         end
 
@@ -276,9 +282,9 @@ Maze = function (x, y, width, height)
     end
 
     local obj = init()
-    while(path[width*height] == 1) do
-        obj = init()
-    end
+  --while(path[width*height] == 1) do
+  --    obj = init()
+  --end
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))

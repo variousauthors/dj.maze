@@ -12,8 +12,8 @@ NEXTSTEPS
 [x] add the shortest path algorithm to the AI
 
 [ ] stagger the AI's move a tic behind the player's
-[ ] victory to the fellow at the center!
-[ ] add the colours and striped score bar
+[x] victory to the fellow at the center!
+[x] add the colours and striped score bar
 
 [ ] Adjust the frequencies for the initial map. Try to make
     fewer open tiles along the center lines
