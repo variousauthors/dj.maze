@@ -1,3 +1,4 @@
+local GOAL = 2
 
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
@@ -198,14 +199,31 @@ Maze = function (x, y, width, height)
 
             -- try weight inversely proportional to
             -- product of indices
-            local max = height*width
             for j = 1, width do
-                local weight = i*j
-                local n = weight/max
-                print(n)
-                structure[i][j] = math.round(n)
+                local r = (1 - 1/(i*j))                   -- distance from bottom right corner
+                local _r = (1 - 1/(width*height - i*j))   -- distance from bottom right corner
+                local c = math.abs(1 + i - j)             -- distance from center line y = -x + height
+                local p = 1/math.abs(1 + width - (i + j)) -- distance from the center line y = x
+
+                -- TODO any of these could be zero...
+
+                c = math.abs(width/2 - c) -- distance from stripes
+
+                local weight = r*_r*c*rng:random()*0.4
+                -- local weight = _r*r*0.5
+
+                local n = rng:random()
+
+                if n < weight then
+                    structure[i][j] = 1
+                else
+                    structure[i][j] = 0
+                end
             end
         end
+
+        structure[1][1] = 0
+        structure[width][height] = 0
 
         local isSolid = function (t_row, t_col)
             return structure[t_row][t_col] == 1
@@ -282,9 +300,9 @@ Maze = function (x, y, width, height)
     end
 
     local obj = init()
-  --while(path[width*height] == 1) do
-  --    obj = init()
-  --end
+    while(path[width*height] == 1) do
+        obj = init()
+    end
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
@@ -322,8 +340,6 @@ Maze = function (x, y, width, height)
             local skip = 0
             if start_offset ~= 0 then skip = 1 end
             local index = i + (middle - start_offset - skip)
-
-            inspect({ index, #table - i })
 
             structure[index] = table[#table - i + 1]
         end
@@ -387,7 +403,7 @@ Maze = function (x, y, width, height)
     pixel_height = offset_y + (height - 1) * global.tile_size
 
     goal = Point(math.floor(width / 2), math.floor(height / 2))
-    structure[goal.getX() + 1][goal.getY() + 1] = 2
+    structure[goal.getX() + 1][goal.getY() + 1] = GOAL
 
     return obj
 end
