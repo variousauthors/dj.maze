@@ -87,7 +87,10 @@ Maze = function (x, y, width, height)
                 local solid = structure[row][col] == 1
                 local goal  = structure[row][col] == 2
 
-                love.graphics.setColor(colors.floor_color)
+                local color = { 2*100*structure[row][col], 0, 0 }
+
+                --love.graphics.setColor(colors.floor_color)
+                love.graphics.setColor(color)
                 if solid then love.graphics.setColor(colors.solid_color) end
                 if goal  then love.graphics.setColor(colors.goal_color) end
 
@@ -211,15 +214,16 @@ Maze = function (x, y, width, height)
 
                 -- local weight = r*_r*c*rng:random()*0.4
                 -- local weight = _r*r*0.5
-                local weight = p
+                local weight = c*0.3*(r*_r)
 
                 local n = rng:random()
+                structure[i][j] = weight
 
-                if n < weight then
-                    structure[i][j] = 1
-                else
-                    structure[i][j] = 0
-                end
+              --if n < weight then
+              --    structure[i][j] = 1
+              --else
+              --    structure[i][j] = 0
+              --end
             end
         end
 
@@ -301,9 +305,9 @@ Maze = function (x, y, width, height)
     end
 
     local obj = init()
-    while(path[width*height] == 1) do
-        obj = init()
-    end
+--  while(path[width*height] == 1) do
+--      obj = init()
+--  end
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
