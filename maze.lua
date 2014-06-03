@@ -34,9 +34,9 @@ Maze = function (x, y, width, height)
     }
 
     local getWeight = function (x, y)
-        local x, y = getTileX(x), getTileY(y)
+        local col, row = getTileX(x), getTileY(y)
 
-        return structure[x][y]
+        return structure[row][col]
     end
 
     -- offset_x < player.getX() < offset_x + width * global.tile_size
@@ -119,8 +119,8 @@ Maze = function (x, y, width, height)
                 if solid then love.graphics.setColor(colors.solid_color) end
                 if goal  then love.graphics.setColor(colors.goal_color) end
 
-                local x = (row - 1) * global.tile_size
-                local y = (col - 1) * global.tile_size
+                local x = (col - 1) * global.tile_size
+                local y = (row - 1) * global.tile_size
 
                 love.graphics.rectangle("fill", x + offset_x, y + offset_y, global.tile_size, global.tile_size)
             end
