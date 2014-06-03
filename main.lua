@@ -33,8 +33,8 @@ local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local gameOver  = false
 local bgm
-local origin = Point(200, 200)
-local maze_d, maze = 10
+local origin = Point(100, 100)
+local maze_d, maze = 13
 local score_band
 
 local debounce = false

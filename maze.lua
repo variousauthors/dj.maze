@@ -201,16 +201,17 @@ Maze = function (x, y, width, height)
             -- product of indices
             for j = 1, width do
                 local r = (1 - 1/(i*j))                   -- distance from bottom right corner
-                local _r = (1 - 1/(width*height - i*j))   -- distance from bottom right corner
+                local _r = (1 - 1/(width*height - i*j))   -- distance from top left corner
                 local c = math.abs(1 + i - j)             -- distance from center line y = -x + height
+                c = math.abs(width/2 - c)                 -- distance from stripes y = -x + height +/- height/2
                 local p = 1/math.abs(1 + width - (i + j)) -- distance from the center line y = x
 
                 -- TODO any of these could be zero...
 
-                c = math.abs(width/2 - c) -- distance from stripes
 
-                local weight = r*_r*c*rng:random()*0.4
+                -- local weight = r*_r*c*rng:random()*0.4
                 -- local weight = _r*r*0.5
+                local weight = p
 
                 local n = rng:random()
 
