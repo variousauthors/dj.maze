@@ -48,7 +48,7 @@ Player = function (x, y)
     end
 
     local incrementScore = function (inc)
-        inspect({ name, inc, inc + score })
+        inspect({ name, inc })
 
         score = score + inc
     end
@@ -99,7 +99,6 @@ Enemy = function (x, y)
     end
 
     player.setMoveList = function (list)
-        inspect(list)
         move_list = list
     end
 

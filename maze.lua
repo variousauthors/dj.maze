@@ -36,7 +36,7 @@ Maze = function (x, y, width, height)
     local getWeight = function (x, y)
         local x, y = getTileX(x), getTileY(y)
 
-        return 5*structure[x][y]
+        return structure[x][y]
     end
 
     -- offset_x < player.getX() < offset_x + width * global.tile_size
@@ -112,15 +112,15 @@ Maze = function (x, y, width, height)
                 local solid = structure[row][col] == 1
                 local goal  = structure[row][col] == 2
 
-                local color = { 100*structure[row][col], 0, 0 }
+                local color = {50 + 100*math.pow(structure[row][col], 2), 20, 20 }
 
                 --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
                 if solid then love.graphics.setColor(colors.solid_color) end
                 if goal  then love.graphics.setColor(colors.goal_color) end
 
-                local x = (col - 1) * global.tile_size
-                local y = (row - 1) * global.tile_size
+                local x = (row - 1) * global.tile_size
+                local y = (col - 1) * global.tile_size
 
                 love.graphics.rectangle("fill", x + offset_x, y + offset_y, global.tile_size, global.tile_size)
             end
@@ -240,7 +240,7 @@ Maze = function (x, y, width, height)
                 -- local weight = r*_r*c*rng:random()*0.4
                 -- local weight = _r*r*0.5
                 -- local weight = c*0.3*(r*_r)
-                local weight = p
+                local weight = c
 
                 local n = rng:random()
                 structure[i][j] = weight
@@ -252,9 +252,6 @@ Maze = function (x, y, width, height)
               --end
             end
         end
-
-        structure[1][1] = 0
-        structure[width][height] = 0
 
         local isSolid = function (t_row, t_col)
             return structure[t_row][t_col] == nil
