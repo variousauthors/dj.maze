@@ -34,8 +34,8 @@ ScoreBand = function ()
         for k, v in pairs(score) do
             stripe_width = 20*v.score
             love.graphics.setColor(v.color)
-            love.graphics.rectangle("fill", offset, 0, stripe_width, 20)
-            offset = offset + stripe_width
+            love.graphics.rectangle("fill", 0, offset, stripe_width, 20)
+            offset = offset + 20
         end
 
         love.graphics.setColor({ r, g, b })

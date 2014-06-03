@@ -1,5 +1,6 @@
 global = {}
 global.tile_size = 16
+global.scale = 1
 
 require "player"
 require "audio"
@@ -33,8 +34,14 @@ local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local gameOver  = false
 local bgm
-local origin = Point(100, 100)
-local maze_d, maze = 13
+local maze_d, maze = 16
+
+global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
+global.map_width  = global.tile_size * 2 * maze_d
+global.map_height = global.tile_size * 2 * maze_d
+
+print(W_HEIGHT - global.map_height)
+local origin = Point((W_WIDTH - global.map_width) / 2, (W_HEIGHT - global.map_height) / 2)
 local score_band
 
 local debounce = false

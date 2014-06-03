@@ -15,7 +15,14 @@ NEXTSTEPS
 [x] victory to the fellow at the center!
 [x] add the colours and striped score bar
 
-[ ] Adjust the frequencies for the initial map. Try to make
+[x] The Darkest Path! Score now depends on finding the darkest coloured path
+[ ] Try to make the colour change a little more continuous
+    right now the colours just go sharply from one to another,
+    so there isn't a clear path. I want random, but then adjusted
+    to make more sense (cause right now it is basically impossible)
+    [ ] This could depend on how well the player is doing
+
+[x] Adjust the frequencies for the initial map. Try to make
     fewer open tiles along the center lines
 [ ] start the map zoomed out, and then zoom in to the dude
 

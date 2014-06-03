@@ -103,6 +103,9 @@ Maze = function (x, y, width, height)
     end
 
     local draw = function ()
+        love.graphics.push()
+        love.graphics.scale(global.scale)
+
         for i = 1, height do
             row = i
 
@@ -112,7 +115,7 @@ Maze = function (x, y, width, height)
                 local solid = structure[row][col] == 1
                 local goal  = structure[row][col] == 2
 
-                local red = 50 + 100*(math.pow(structure[row][col], 1))
+                local red = 50 + 100*(math.pow(structure[row][col], 2))
                 local green = 50 + 100*(math.pow(structure[row][col], 1))
                 local blue = 50 + 100*(math.pow(structure[row][col], 1))
                 local color = { red, green, blue }
@@ -130,6 +133,7 @@ Maze = function (x, y, width, height)
         end
 
         enemy.draw()
+        love.graphics.pop()
     end
 
     -- given an adjacency matrix A[][] returns a table
