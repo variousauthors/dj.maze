@@ -112,7 +112,10 @@ Maze = function (x, y, width, height)
                 local solid = structure[row][col] == 1
                 local goal  = structure[row][col] == 2
 
-                local color = {50 + 100*math.pow(structure[row][col], 2), 20, 20 }
+                local red = 50 + 100*(math.pow(structure[row][col], 1))
+                local green = 50 + 100*(math.pow(structure[row][col], 1))
+                local blue = 50 + 100*(math.pow(structure[row][col], 1))
+                local color = { red, green, blue }
 
                 --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
@@ -233,7 +236,7 @@ Maze = function (x, y, width, height)
                 local c = math.abs(1 + i - j)             -- distance from center line y = -x + height
                 c = math.abs(width/2 - c)                 -- distance from stripes y = -x + height +/- height/2
                 c = c/(width/2)
-                local p = 1/math.abs(1 + width - (i + j)) -- distance from the center line y = x
+                local p = 1/math.abs(width - (i + j)) -- distance from the center line y = x
 
                 -- TODO any of these could be zero...
 
@@ -243,7 +246,7 @@ Maze = function (x, y, width, height)
                 local weight = c
 
                 local n = rng:random()
-                structure[i][j] = weight
+                structure[i][j] = n
 
               --if n < weight then
               --    structure[i][j] = 1

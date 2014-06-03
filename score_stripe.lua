@@ -32,7 +32,7 @@ ScoreBand = function ()
         local r, g, b = love.graphics.getColor()
 
         for k, v in pairs(score) do
-            stripe_width = v.score
+            stripe_width = 20*v.score
             love.graphics.setColor(v.color)
             love.graphics.rectangle("fill", offset, 0, stripe_width, 20)
             offset = offset + stripe_width
