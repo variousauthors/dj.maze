@@ -8,13 +8,18 @@ Player = function (x, y)
     local color  = RED
     local p      = Point(x, y)
     local message = ""
+    local score = 0
 
     local keypressed = function (key)
+        local did_move = true
+
         if key == "down"      then p.setY(p.getY() + global.tile_size)
         elseif key == "up"    then p.setY(p.getY() - global.tile_size)
         elseif key == "right" then p.setX(p.getX() + global.tile_size)
         elseif key == "left"  then p.setX(p.getX() - global.tile_size)
-        end
+        else did_move = false end
+
+        return did_move
     end
 
     local draw = function ()
@@ -41,18 +46,28 @@ Player = function (x, y)
         return color
     end
 
+    local incrementScore = function (inc)
+        score = score + inc
+    end
+
+    local getScore = function ()
+        return score
+    end
+
     return {
-        getX       = p.getX,
-        getY       = p.getY,
-        setX       = p.setX,
-        setY       = p.setY,
-        setColor   = setColor,
-        getColor   = getColor,
-        setMessage = setMessage,
-        getMessage = getMessage,
-        update     = update,
-        draw       = draw,
-        keypressed = keypressed
+        getX           = p.getX,
+        getY           = p.getY,
+        setX           = p.setX,
+        setY           = p.setY,
+        setColor       = setColor,
+        getColor       = getColor,
+        setMessage     = setMessage,
+        getMessage     = getMessage,
+        incrementScore = incrementScore,
+        getScore       = getScore,
+        update         = update,
+        draw           = draw,
+        keypressed     = keypressed
     }
 end
 
@@ -81,7 +96,7 @@ Enemy = function (x, y)
     player.keypressed = function (key)
 
         key = getNextMove()
-        _keypressed(key)
+        return _keypressed(key)
     end
 
     return player

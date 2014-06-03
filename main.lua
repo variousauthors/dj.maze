@@ -50,6 +50,11 @@ function love.load()
     init()
     score_band = ScoreBand()
 
+    score_band.register(player)
+    score_band.register(maze)
+
+    maze.updateScore   = score_band.getScoreUpdater(maze)
+    player.updateScore = score_band.getScoreUpdater(player)
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
 
@@ -111,6 +116,9 @@ function love.update(dt)
     if (maze.getWinner() ~= nil) then
         score_band.addStripe(maze.getWinner().getColor())
     end
+
+    maze.updateScore(dt)
+    player.updateScore(dt)
 end
 
 

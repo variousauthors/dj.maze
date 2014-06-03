@@ -33,6 +33,15 @@ Maze = function (x, y, width, height)
         goal_color  = { 55, 200, 55 }
     }
 
+    local getWeight = function (x, y)
+        local x, y = getTileX(x), getTileY(y)
+
+        print(structure[x][y])
+        print(100*structure[x][y])
+
+        return 5*structure[x][y]
+    end
+
     -- offset_x < player.getX() < offset_x + width * global.tile_size
     local tryMove = function (player, key)
         local old_x = player.getX()
@@ -43,12 +52,13 @@ Maze = function (x, y, width, height)
 
         if offset_x > player.getX() or player.getX() > pixel_width              then moved = false
         elseif offset_y > player.getY() or player.getY() > pixel_height         then moved = false
-        elseif structure[getTileY(player.getY())][getTileX(player.getX())] == 1 then moved = false
         end
 
         if moved == false then
             player.setX(old_x)
             player.setY(old_y)
+        else
+            player.incrementScore(getWeight(player.getX(), player.getY()))
         end
 
         return moved
@@ -58,7 +68,17 @@ Maze = function (x, y, width, height)
     local keypressed = function (key, player)
         if not tryMove(player, key) then return end
 
-        enemy.keypressed(key)
+        if enemy.keypressed(key) then
+            enemy.incrementScore(getWeight(enemy.getX(), enemy.getY()))
+        end
+    end
+
+    local getScore = function ()
+        return enemy.getScore()
+    end
+
+    local getColor = function ()
+        return enemy.getColor()
     end
 
     local getWinner = function ()
@@ -72,7 +92,6 @@ Maze = function (x, y, width, height)
         if player.getX() == goal_x and player.getY() == goal_y then
             winner = player
         elseif enemy.getX() == goal_x and enemy.getY() == goal_y then
-            print("in")
             winner = enemy
         end
     end
@@ -87,7 +106,7 @@ Maze = function (x, y, width, height)
                 local solid = structure[row][col] == 1
                 local goal  = structure[row][col] == 2
 
-                local color = { 2*100*structure[row][col], 0, 0 }
+                local color = { 100*structure[row][col], 0, 0 }
 
                 --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
@@ -211,7 +230,6 @@ Maze = function (x, y, width, height)
 
                 -- TODO any of these could be zero...
 
-
                 -- local weight = r*_r*c*rng:random()*0.4
                 -- local weight = _r*r*0.5
                 local weight = c*0.3*(r*_r)
@@ -300,7 +318,9 @@ Maze = function (x, y, width, height)
             keypressed = keypressed,
             getPixelX  = getPixelX,
             getPixelY  = getPixelY,
-            getWinner  = getWinner
+            getWinner  = getWinner,
+            getScore   = getScore,
+            getColor   = getColor
         }
     end
 
