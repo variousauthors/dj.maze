@@ -9,6 +9,7 @@ Player = function (x, y)
     local p      = Point(x, y)
     local message = ""
     local score = 0
+    local name = "red"
 
     local keypressed = function (key)
         local did_move = true
@@ -47,11 +48,17 @@ Player = function (x, y)
     end
 
     local incrementScore = function (inc)
+        inspect({ name, inc, inc + score })
+
         score = score + inc
     end
 
     local getScore = function ()
         return score
+    end
+
+    local setName = function(n)
+        name = n
     end
 
     return {
@@ -65,6 +72,7 @@ Player = function (x, y)
         getMessage     = getMessage,
         incrementScore = incrementScore,
         getScore       = getScore,
+        setName        = setName,
         update         = update,
         draw           = draw,
         keypressed     = keypressed
@@ -74,10 +82,12 @@ end
 Enemy = function (x, y)
     -- the difference between player and AI is usually just
     -- a matter of circumstance
-    local player = Player(x, y)
+    local player                = Player(x, y)
     local move_index, move_list = 1
-    local _keypressed = player.keypressed
+    local _keypressed           = player.keypressed
+
     player.setColor(BLUE)
+    player.setName("blue")
 
     -- read the move list in reverse
     local getNextMove = function ()

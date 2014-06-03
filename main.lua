@@ -43,11 +43,7 @@ local init = function ()
     maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
     player = Player(maze.getPixelX(0), maze.getPixelY(0))
     player.setMessage("YOU WIN")
-end
 
-function love.load()
-    love.graphics.setBackgroundColor(0, 0, 0)
-    init()
     score_band = ScoreBand()
 
     score_band.register(player)
@@ -55,6 +51,11 @@ function love.load()
 
     maze.updateScore   = score_band.getScoreUpdater(maze)
     player.updateScore = score_band.getScoreUpdater(player)
+end
+
+function love.load()
+    love.graphics.setBackgroundColor(0, 0, 0)
+    init()
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
 

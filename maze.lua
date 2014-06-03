@@ -36,9 +36,6 @@ Maze = function (x, y, width, height)
     local getWeight = function (x, y)
         local x, y = getTileX(x), getTileY(y)
 
-        print(structure[x][y])
-        print(100*structure[x][y])
-
         return 5*structure[x][y]
     end
 
@@ -85,14 +82,23 @@ Maze = function (x, y, width, height)
         return winner
     end
 
+    local chooseWinner = function ()
+        local winner = player
+
+        -- whoever has collected the most weight loses
+        if enemy.getScore() < player.getScore() then
+            winner = enemy
+        end
+
+        return winner
+    end
+
     local update = function ()
         local goal_x = goal.getX() * global.tile_size + offset_x
         local goal_y = goal.getY() * global.tile_size + offset_y
 
         if player.getX() == goal_x and player.getY() == goal_y then
-            winner = player
-        elseif enemy.getX() == goal_x and enemy.getY() == goal_y then
-            winner = enemy
+            winner = chooseWinner()
         end
     end
 
@@ -135,8 +141,8 @@ Maze = function (x, y, width, height)
             path[i] = a
 
             -- initialize the edges coming from a
-            if adjacencies[a][i] > 0 then
-                d[i] = adjacencies[a][i]
+            if adjacencies[a][i].open > 0 then
+                d[i] = adjacencies[a][i].weight
             end
         end
 
@@ -163,17 +169,17 @@ Maze = function (x, y, width, height)
                     -- if the distance from s to j is less than
                     -- the distance from s to v plus the distance from
                     -- v to j, then decrease the distance
-                    if visited[j] == 0 and adjacencies[v][j] > 0 then
+                    if visited[j] == 0 and adjacencies[v][j].open > 0 then
                         -- if there is an unexplored edge vj
 
                         -- at every step we mark the edge j as having
                         -- been arrived at via v
 
                         if d[j] == nil then
-                            d[j] = d[v] + adjacencies[v][j]
+                            d[j] = d[v] + adjacencies[v][j].weight
                             path[j] = v
-                        elseif d[j] > d[v] + adjacencies[v][j] then
-                            d[j] = d[v] + adjacencies[v][j]
+                        elseif d[j] > d[v] + adjacencies[v][j].weight then
+                            d[j] = d[v] + adjacencies[v][j].weight
                             path[j] = v
                         end
                     end
@@ -226,13 +232,15 @@ Maze = function (x, y, width, height)
                 local _r = (1 - 1/(width*height - i*j))   -- distance from top left corner
                 local c = math.abs(1 + i - j)             -- distance from center line y = -x + height
                 c = math.abs(width/2 - c)                 -- distance from stripes y = -x + height +/- height/2
+                c = c/(width/2)
                 local p = 1/math.abs(1 + width - (i + j)) -- distance from the center line y = x
 
                 -- TODO any of these could be zero...
 
                 -- local weight = r*_r*c*rng:random()*0.4
                 -- local weight = _r*r*0.5
-                local weight = c*0.3*(r*_r)
+                -- local weight = c*0.3*(r*_r)
+                local weight = p
 
                 local n = rng:random()
                 structure[i][j] = weight
@@ -249,7 +257,7 @@ Maze = function (x, y, width, height)
         structure[width][height] = 0
 
         local isSolid = function (t_row, t_col)
-            return structure[t_row][t_col] == 1
+            return structure[t_row][t_col] == nil
         end
 
         local exists = function (t_row, t_col)
@@ -290,7 +298,7 @@ Maze = function (x, y, width, height)
                 local a_row, a_col = rowColFromIndex(j)
                 
                 -- if the tile is not solid, mark
-                if structure[t_row][t_col] == 0 then
+                --if structure[t_row][t_col] == 0 then
 
                     -- if the potential adjacency is not the tile
                     -- if the potential adjacency is not solid
@@ -300,13 +308,13 @@ Maze = function (x, y, width, height)
                         and isAdjacent(t_row, t_col, a_row, a_col)
                         then
 
-                        adjacencies[i][j] = 1
+                        adjacencies[i][j] = { open = 1, weight = structure[t_row][t_col] }
                     else
-                        adjacencies[i][j] = 0
+                        adjacencies[i][j] = { open = 0 }
                     end
-                else
-                    adjacencies[i][j] = 0
-                end
+                --else
+                 --   adjacencies[i][j] = { open = 0 }
+                --end
             end
         end
 
