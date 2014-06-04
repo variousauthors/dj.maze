@@ -48,7 +48,7 @@ local debounce = false
 local init = function ()
     maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
     player = Player(maze.getPixelX(0), maze.getPixelY(0))
-    player.setMessages({ "Such Path!", "WOW!", "So Dark!", "Amaze!" })
+    player.setMessages({ "You Win!" })
     maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
     score_band.clear()

@@ -24,7 +24,7 @@ NEXTSTEPS
 [x] encouraging messages
 [ ] local multiplayer
 [ ] the dudes should leave a coloured echo trail behind them
-[ ] revert the stripe bar to the old overall score mode
+[x] revert the stripe bar to the old overall score mode
 
 [x] Adjust the frequencies for the initial map. Try to make
     fewer open tiles along the center lines
