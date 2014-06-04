@@ -34,6 +34,7 @@ SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 local countdown = 3.5
 local bgm
 local maze_d, maze = 16
+local victory_message, results
 
 global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
 global.map_width  = global.tile_size * 2 * maze_d
@@ -66,15 +67,6 @@ function love.load()
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
 
-function love.keypressed(key)
-    if (love.keyboard.isDown("w", "a", "s", "d")) then
-        -- TODO player2's moves go here
-    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
-        maze.keypressed(key, player)
-    end
-
-end
-
 function love.draw()
     -- draw the map
     -- draw the dudes
@@ -91,18 +83,18 @@ function love.draw()
         love.graphics.setFont(SPACE_FONT)
         love.graphics.printf(victory_message, -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
         love.graphics.setFont(SCORE_FONT)
-        love.graphics.printf(score_band.getResults(), -10, W_HEIGHT / 2, W_WIDTH, "center")
+        love.graphics.printf(results, -10, W_HEIGHT / 2, W_WIDTH, "center")
     end
 end
 
 function love.focus(f) gameIsPaused = not f end
 
--- if the game is over, press space to go again!
-function love.keyreleased(key)
-    -- press escape to quit
+function love.keypressed(key)
     if (key == "escape") then
         love.event.quit()
     end
+
+    if winner ~= nil then return init() end
 
     -- press space to give up
     if (key == " ") then
@@ -113,11 +105,23 @@ function love.keyreleased(key)
             print("winner was nil")
             winner = maze.lose()
             score_band.addStripe(winner.getColor())
-            victory_message = winner.getMessage()
+            victory_message = "Dream Big!"
+            results = ""
         else
             init()
         end
     end
+
+    if (love.keyboard.isDown("w", "a", "s", "d")) then
+        -- TODO player2's moves go here
+    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
+        maze.keypressed(key, player)
+    end
+end
+
+-- if the game is over, press space to go again!
+function love.keyreleased(key)
+    -- press escape to quit
 end
 
 function love.update(dt)
@@ -141,6 +145,7 @@ function love.update(dt)
     if (winner ~= nil) then
         score_band.addStripe(winner.getColor())
         victory_message = winner.getMessage()
+        results = score_band.getResults()
     end
 end
 
