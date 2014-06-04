@@ -344,6 +344,7 @@ Maze = function (x, y, width, height)
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
     enemy.setMessage("YOU LOSE")
+    obj.getName = enemy.getName
 
     -- create a new table with n + n - 1 rows
     -- copy the existing table into the top or bottom

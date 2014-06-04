@@ -24,12 +24,12 @@ local RED    = { 200, 55, 0 }
 local GREEN  = { 0, 200, 55 }
 local BLUE   = { 55, 0, 200 }
 
-local W_WIDTH  = love.window.getWidth()
-local W_HEIGHT = love.window.getHeight()
+W_WIDTH  = love.window.getWidth()
+W_HEIGHT = love.window.getHeight()
 
-local SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
-local COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
-local SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
+SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
+COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
+SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
 local countdown = 3.5
 local gameOver  = false

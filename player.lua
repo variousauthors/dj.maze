@@ -57,8 +57,12 @@ Player = function (x, y)
         return score
     end
 
-    local setName = function(n)
+    local setName = function (n)
         name = n
+    end
+    
+    local getName = function ()
+        return name
     end
 
     return {
@@ -73,6 +77,7 @@ Player = function (x, y)
         incrementScore = incrementScore,
         getScore       = getScore,
         setName        = setName,
+        getName        = getName,
         update         = update,
         draw           = draw,
         keypressed     = keypressed
