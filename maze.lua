@@ -82,6 +82,12 @@ Maze = function (x, y, width, height)
         return winner
     end
 
+    local lose = function ()
+        winner = enemy
+
+        return enemy
+    end
+
     local setMessages = function (messages)
         enemy.setMessages(messages)
     end
@@ -333,6 +339,7 @@ Maze = function (x, y, width, height)
             getPixelX  = getPixelX,
             getPixelY  = getPixelY,
             getWinner  = getWinner,
+            lose       = lose,
             getScore   = getScore,
             getColor   = getColor,
             setMessages = setMessages

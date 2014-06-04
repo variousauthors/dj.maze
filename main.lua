@@ -32,7 +32,6 @@ COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
 SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
 local countdown = 3.5
-local gameOver  = false
 local bgm
 local maze_d, maze = 16
 
@@ -52,8 +51,7 @@ local init = function ()
     player.setMessages({ "Such Path!", "WOW!", "So Dark!", "Amaze!" })
     maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
-    score_band = ScoreBand()
-
+    score_band.clear()
     score_band.register(player)
     score_band.register(maze)
 
@@ -63,6 +61,7 @@ end
 
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
+    score_band = ScoreBand()
     init()
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
@@ -102,11 +101,17 @@ function love.keyreleased(key)
 
     -- press space to give up
     if (key == " ") then
-        gameOver  = false
+        print("space")
 
-        init()
-        --love.audio.stop(bgm)
-        --love.audio.play(bgm)
+        -- if the player has given up prematurely, they lose
+        if (winner == nil) then
+            print("winner was nil")
+            winner = maze.lose()
+            score_band.addStripe(winner.getColor())
+            victory_message = winner.getMessage()
+        else
+            init()
+        end
     end
 end
 
