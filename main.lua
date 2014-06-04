@@ -67,7 +67,12 @@ function love.load()
 end
 
 function love.keypressed(key)
-    maze.keypressed(key, player)
+    if (love.keyboard.isDown("w", "a", "s", "d")) then
+        -- TODO player2's moves go here
+    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
+        maze.keypressed(key, player)
+    end
+
 end
 
 function love.draw()
