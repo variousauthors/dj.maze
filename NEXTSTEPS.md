@@ -21,6 +21,10 @@ NEXTSTEPS
     so there isn't a clear path. I want random, but then adjusted
     to make more sense (cause right now it is basically impossible)
     [ ] This could depend on how well the player is doing
+[x] encouraging messages
+[ ] local multiplayer
+[ ] the dudes should leave a coloured echo trail behind them
+[ ] revert the stripe bar to the old overall score mode
 
 [x] Adjust the frequencies for the initial map. Try to make
     fewer open tiles along the center lines
@@ -28,7 +32,6 @@ NEXTSTEPS
 
 [ ] add music, a countdown, and a taunt or two for losing
 [ ] the dudes should pulse to the music when they move, and take turns moving
-[ ] the dudes should leave a coloured echo trail behind them
 [ ] add a timer: if you take longer than 3 sec to make a move,
     your opponent moves.
     - maybe they just move every 3 sec regardless? With the music.
