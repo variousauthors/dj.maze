@@ -108,6 +108,9 @@ function love.keyreleased(key)
 end
 
 function love.update(dt)
+    maze.updateScore(dt)
+    player.updateScore(dt)
+
     if maze.getWinner() ~= nil then return end
     if gameIsPaused then return end
 
@@ -124,9 +127,6 @@ function love.update(dt)
     if (maze.getWinner() ~= nil) then
         score_band.addStripe(maze.getWinner().getColor())
     end
-
-    maze.updateScore(dt)
-    player.updateScore(dt)
 end
 
 

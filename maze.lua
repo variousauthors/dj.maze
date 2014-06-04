@@ -1,4 +1,4 @@
-local GOAL = 2
+local GOAL = 1*math.pow(10, -16) -- too small to affect the score ^o^//
 
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
@@ -112,8 +112,7 @@ Maze = function (x, y, width, height)
             for j = 1, width do
                 col = j-- reversing the index, 3 downto 1
 
-                local solid = structure[row][col] == 1
-                local goal  = structure[row][col] == 2
+                local goal  = structure[row][col] == GOAL
 
                 local red = 50 + 100*(math.pow(structure[row][col], 2))
                 local green = 50 + 100*(math.pow(structure[row][col], 1))
@@ -122,7 +121,6 @@ Maze = function (x, y, width, height)
 
                 --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
-                if solid then love.graphics.setColor(colors.solid_color) end
                 if goal  then love.graphics.setColor(colors.goal_color) end
 
                 local x = (col - 1) * global.tile_size
@@ -250,7 +248,7 @@ Maze = function (x, y, width, height)
                 local weight = c
 
                 local n = rng:random()
-                structure[i][j] = n
+                structure[i][j] = math.pow(n, 3)
 
               --if n < weight then
               --    structure[i][j] = 1
