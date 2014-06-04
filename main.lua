@@ -40,7 +40,6 @@ global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
 global.map_width  = global.tile_size * 2 * maze_d
 global.map_height = global.tile_size * 2 * maze_d
 
-print(W_HEIGHT - global.map_height)
 local origin = Point((W_WIDTH - global.map_width) / 2, (W_HEIGHT - global.map_height) / 2)
 local score_band
 

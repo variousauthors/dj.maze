@@ -26,6 +26,7 @@ ScoreBand = function ()
 
         return function (dt)
             local rate = 10*math.abs(score[entity].score - entity.getScore())
+
             if score[entity].score < entity.getScore() then
                 score[entity].score = score[entity].score + rate*dt
             end
