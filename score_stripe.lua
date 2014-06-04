@@ -27,6 +27,16 @@ ScoreBand = function ()
         end
     end
 
+    local getResults = function ()
+        local diff = 0
+
+        for k, v in pairs(score) do
+            diff = math.abs(diff - v.score)
+        end
+
+        return "|p - r| < " .. diff
+    end
+
     local draw = function ()
         local offset = 0
         local r, g, b = love.graphics.getColor()
@@ -60,6 +70,7 @@ ScoreBand = function ()
         draw            = draw,
         addStripe       = addStripe,
         getScoreUpdater = getScoreUpdater,
-        register        = register
+        register        = register,
+        getResults      = getResults
     }
 end

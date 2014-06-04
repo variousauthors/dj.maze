@@ -82,6 +82,10 @@ Maze = function (x, y, width, height)
         return winner
     end
 
+    local setMessages = function (messages)
+        enemy.setMessages(messages)
+    end
+
     local chooseWinner = function ()
         local winner = player
 
@@ -330,7 +334,8 @@ Maze = function (x, y, width, height)
             getPixelY  = getPixelY,
             getWinner  = getWinner,
             getScore   = getScore,
-            getColor   = getColor
+            getColor   = getColor,
+            setMessages = setMessages
         }
     end
 
@@ -341,7 +346,6 @@ Maze = function (x, y, width, height)
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
-    enemy.setMessage("YOU LOSE")
     obj.getName = enemy.getName
 
     -- create a new table with n + n - 1 rows

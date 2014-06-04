@@ -49,7 +49,8 @@ local debounce = false
 local init = function ()
     maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
     player = Player(maze.getPixelX(0), maze.getPixelY(0))
-    player.setMessage("YOU WIN")
+    player.setMessages({ "Such Path!", "WOW!", "So Dark!", "Amaze!" })
+    maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
     score_band = ScoreBand()
 
@@ -84,7 +85,9 @@ function love.draw()
         -- draw the prompt
         love.graphics.setColor(255, 255, 255)
         love.graphics.setFont(SPACE_FONT)
-        love.graphics.printf(maze.getWinner().getMessage(), -10, W_HEIGHT / 2 - 175, W_WIDTH, "center")
+        love.graphics.printf(victory_message, -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+        love.graphics.setFont(SCORE_FONT)
+        love.graphics.printf(score_band.getResults(), -10, W_HEIGHT / 2, W_WIDTH, "center")
     end
 end
 
@@ -123,9 +126,11 @@ function love.update(dt)
     end
 
     maze.update()
+    winner = maze.getWinner()
 
-    if (maze.getWinner() ~= nil) then
-        score_band.addStripe(maze.getWinner().getColor())
+    if (winner ~= nil) then
+        score_band.addStripe(winner.getColor())
+        victory_message = winner.getMessage()
     end
 end
 

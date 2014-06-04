@@ -2,6 +2,7 @@ require "vector"
 
 local RED   = { 200, 55, 55 }
 local BLUE  = { 55, 55, 200 }
+local rnd = love.math.newRandomGenerator(os.time())
 
 Player = function (x, y)
     local radius = global.tile_size / 3
@@ -10,6 +11,7 @@ Player = function (x, y)
     local message = ""
     local score = 0
     local name = "red"
+    local messager = Messager()
 
     local keypressed = function (key)
         local did_move = true
@@ -31,12 +33,8 @@ Player = function (x, y)
         love.graphics.setColor({ r, g, b })
     end
 
-    local setMessage = function (msg)
-        message = msg
-    end
-
     local getMessage = function ()
-        return message
+        return messager.next_message()
     end
 
     local setColor = function (c)
@@ -72,7 +70,7 @@ Player = function (x, y)
         setY           = p.setY,
         setColor       = setColor,
         getColor       = getColor,
-        setMessage     = setMessage,
+        setMessages     = messager.setMessages,
         getMessage     = getMessage,
         incrementScore = incrementScore,
         getScore       = getScore,
@@ -114,4 +112,23 @@ Enemy = function (x, y)
     end
 
     return player
+end
+
+Messager = function (messages)
+    local messages = messages
+
+    local next_message = function ()
+        local index = rnd:random(1, #messages)
+
+        return messages[index]
+    end
+
+    local setMessages = function (msg)
+        messages = msg
+    end
+
+    return {
+        next_message = next_message,
+        setMessages  = setMessages
+    }
 end
