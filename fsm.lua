@@ -32,16 +32,17 @@
 --  })
 
 FSM = function ()
-    local states = {}
-    local current_state = {}
+    local states        = {}
+    local current_state = { name = "nil" }
 
     local transitionTo = function (next_state)
+        inspect({ from = current_state.name, to = next_state })
         current_state = states[next_state]
 
+        current_state.variables = {}
         current_state.init()
 
         love.draw       = current_state.draw
-        love.keypressed = current_state.keypressed
     end
 
     local update = function (dt)
@@ -50,48 +51,90 @@ FSM = function ()
         -- iterate over the transitions for the current state
         local next_state = {}
 
-        for k, transition in pairs(current_state.transitions) do
+        for i, transition in ipairs(current_state.transitions) do
             if transition.condition() then
                 table.insert(next_state, transition.to)
             end
         end
 
         if #next_state == 1 then
-            print("hellooo")
-            transitionTo(current_state)
+            transitionTo(unpack(next_state))
         elseif #next_state > 1 then
             -- exception!
             -- ambiguous state transition
         end
     end
 
+    love.keypressed = function (key)
+        if (key == "escape") then
+            love.event.quit()
+        end
+
+          if winner ~= nil then return init() end
+
+        -- transition to draw or win
+        if (key == " ") then
+            state_machine.set(key)
+
+        --  -- if the player has given up prematurely, they lose
+        --  if (winner == nil) then
+        --      winner = maze.lose()
+        --      score_band.addStripe(winner.getColor())
+        --      victory_message = "Dream Big!"
+        --      results = ""
+        --  else
+        --      init()
+        --  end
+        end
+
+        current_state.keypressed(key)
+    end
+
     local addState = function(state)
         states[state.name] = {
+            name        = state.name,
             init        = state.init,
             update      = state.update,
             draw        = state.draw,
             keypressed  = state.keypressed,
-            transitions = {}
+            transitions = {},
+            variables   = {}
         }
 
         return self
     end
 
     local addTransition = function(transition)
-        states[transition.from].transitions = {
+        table.insert(states[transition.from].transitions, {
             to        = transition.to,
             condition = transition.condition
-        }
+        })
     end
 
     local start = function ()
         transitionTo("start")
     end
 
+    local set = function (key)
+        current_state.variables[key] = true
+    end
+
+    local isSet = function (key)
+        local result = false
+
+        if current_state.variables[key] ~= nil then
+            result = current_state.variables[key]
+        end
+
+        return result
+    end
+
     return {
         start         = start,
         update        = update,
         addState      = addState,
-        addTransition = addTransition
+        addTransition = addTransition,
+        set           = set,
+        isSet         = isSet
     }
 end

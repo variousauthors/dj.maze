@@ -32,7 +32,7 @@ SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
 COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
 SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
-local main = {}
+local main, maze, menu = {}
 local countdown = 3.5
 local bgm
 local maze_d, maze = 16
@@ -79,33 +79,7 @@ function main.draw()
 end
 
 function main.keypressed(key)
-    if (key == "escape") then
-        love.event.quit()
-    end
 
-    if winner ~= nil then return init() end
-
-    -- press space to give up
-    if (key == " ") then
-        print("space")
-
-        -- if the player has given up prematurely, they lose
-        if (winner == nil) then
-            print("winner was nil")
-            winner = maze.lose()
-            score_band.addStripe(winner.getColor())
-            victory_message = "Dream Big!"
-            results = ""
-        else
-            init()
-        end
-    end
-
-    if (love.keyboard.isDown("w", "a", "s", "d")) then
-        -- TODO player2's moves go here
-    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
-        maze.keypressed(key, player)
-    end
 end
 
 function main.update(dt)
@@ -136,15 +110,34 @@ end
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     score_band = ScoreBand()
+    menu = {}
 
     state_machine = FSM()
 
     state_machine.addState({
-        name       = "start",
+        name       = "run",
         init       = init,
         draw       = main.draw,
         update     = main.update,
-        keypressed = main.keypressed
+        keypressed = function (key)
+            if (love.keyboard.isDown("w", "a", "s", "d")) then
+                -- TODO player2's moves go here
+            elseif (love.keyboard.isDown("down", "up", "right", "left")) then
+                maze.keypressed(key, player)
+            end
+        end
+    })
+
+    state_machine.addState({
+        name       = "start",
+        init       = function () end,
+        draw       = function ()
+            love.graphics.printf("TITLE SCREEN", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+        end,
+        update     = function () end,
+        keypressed = function (key)
+            menu.choice = key
+        end
     })
     
     state_machine.addState({
@@ -159,9 +152,33 @@ function love.load()
 
     state_machine.addTransition({
         from      = "start",
-        to        = "stop",
+        to        = "run",
+        condition = function ()
+            return menu.choice ~= nil
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "run",
+        to        = "run",
         condition = function ()
             return maze.getWinner() ~= nil
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "stop",
+        to        = "run",
+        condition = function ()
+            return state_machine.isSet(" ")
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "run",
+        to        = "run",
+        condition = function ()
+            return state_machine.isSet(" ")
         end
     })
 
