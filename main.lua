@@ -5,6 +5,7 @@ global.scale = 1
 require "player"
 require "audio"
 require "maze"
+require "fsm"
 require "score_stripe"
 
 local i = require("vendor/inspect/inspect")
@@ -31,6 +32,7 @@ SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
 COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
 SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
+local main = {}
 local countdown = 3.5
 local bgm
 local maze_d, maze = 16
@@ -59,19 +61,9 @@ local init = function ()
     player.updateScore = score_band.getScoreUpdater(player)
 end
 
-function love.load()
-    love.graphics.setBackgroundColor(0, 0, 0)
-    score_band = ScoreBand()
-    init()
-    --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
-end
+function love.focus(f) gameIsPaused = not f end
 
-function love.draw()
-    -- draw the map
-    -- draw the dudes
-    -- draw the goal
-    -- draw the HUD
-    
+function main.draw()
     maze.draw()
     player.draw()
     score_band.draw()
@@ -86,9 +78,7 @@ function love.draw()
     end
 end
 
-function love.focus(f) gameIsPaused = not f end
-
-function love.keypressed(key)
+function main.keypressed(key)
     if (key == "escape") then
         love.event.quit()
     end
@@ -118,12 +108,7 @@ function love.keypressed(key)
     end
 end
 
--- if the game is over, press space to go again!
-function love.keyreleased(key)
-    -- press escape to quit
-end
-
-function love.update(dt)
+function main.update(dt)
     maze.updateScore(dt)
     player.updateScore(dt)
 
@@ -148,4 +133,40 @@ function love.update(dt)
     end
 end
 
+function love.load()
+    love.graphics.setBackgroundColor(0, 0, 0)
+    score_band = ScoreBand()
+
+    state_machine = FSM()
+
+    state_machine.addState({
+        name       = "start",
+        init       = init,
+        draw       = main.draw,
+        update     = main.update,
+        keypressed = main.keypressed
+    })
+    
+    state_machine.addState({
+        name       = "stop",
+        init       = function () end,
+        draw       = function ()
+            love.graphics.printf("WAT", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+        end,
+        update     = function () end,
+        keypressed = function () end
+    })
+
+    state_machine.addTransition({
+        from      = "start",
+        to        = "stop",
+        condition = function ()
+            return maze.getWinner() ~= nil
+        end
+    })
+
+    love.update = state_machine.update
+    state_machine.start()
+    --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
+end
 
