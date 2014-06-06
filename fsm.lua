@@ -40,13 +40,11 @@ FSM = function ()
         current_state = states[next_state]
 
         current_state.variables = {}
-        current_state.init()
-
-        love.draw       = current_state.draw
+        if current_state.init then current_state.init() end
     end
 
     local update = function (dt)
-        current_state.update(dt)
+        if current_state.update then current_state.update(dt) end
 
         -- iterate over the transitions for the current state
         local next_state = {}
@@ -60,17 +58,21 @@ FSM = function ()
         if #next_state == 1 then
             transitionTo(unpack(next_state))
         elseif #next_state > 1 then
+            print("AMBIGUITY!")
+            inspect(next_state)
             -- exception!
             -- ambiguous state transition
         end
     end
 
-    love.keypressed = function (key)
+    local draw = function ()
+        if current_state.draw then current_state.draw() end
+    end
+
+    local keypressed = function (key)
         if (key == "escape") then
             love.event.quit()
         end
-
-          if winner ~= nil then return init() end
 
         -- transition to draw or win
         if (key == " ") then
@@ -87,7 +89,7 @@ FSM = function ()
         --  end
         end
 
-        current_state.keypressed(key)
+        if current_state.keypressed then current_state.keypressed(key) end
     end
 
     local addState = function(state)
@@ -132,6 +134,8 @@ FSM = function ()
     return {
         start         = start,
         update        = update,
+        keypressed    = keypressed,
+        draw          = draw,
         addState      = addState,
         addTransition = addTransition,
         set           = set,

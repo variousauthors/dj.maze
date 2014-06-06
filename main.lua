@@ -79,7 +79,11 @@ function main.draw()
 end
 
 function main.keypressed(key)
-
+    if (love.keyboard.isDown("w", "a", "s", "d")) then
+        -- TODO player2's moves go here
+    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
+        maze.keypressed(key, player)
+    end
 end
 
 function main.update(dt)
@@ -93,17 +97,14 @@ function main.update(dt)
 
     time = time + dt
 
-    if (countdown > 0) then
-        countdown = countdown - dt * 2
-    end
-
     maze.update()
     winner = maze.getWinner()
 
     if (winner ~= nil) then
         score_band.addStripe(winner.getColor())
+
         victory_message = winner.getMessage()
-        results = score_band.getResults()
+        results         = score_band.getResults()
     end
 end
 
@@ -119,22 +120,14 @@ function love.load()
         init       = init,
         draw       = main.draw,
         update     = main.update,
-        keypressed = function (key)
-            if (love.keyboard.isDown("w", "a", "s", "d")) then
-                -- TODO player2's moves go here
-            elseif (love.keyboard.isDown("down", "up", "right", "left")) then
-                maze.keypressed(key, player)
-            end
-        end
+        keypressed = main.keypressed
     })
 
     state_machine.addState({
         name       = "start",
-        init       = function () end,
         draw       = function ()
             love.graphics.printf("TITLE SCREEN", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
         end,
-        update     = function () end,
         keypressed = function (key)
             menu.choice = key
         end
@@ -142,14 +135,12 @@ function love.load()
     
     state_machine.addState({
         name       = "stop",
-        init       = function () end,
         draw       = function ()
             love.graphics.printf("WAT", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
         end,
-        update     = function () end,
-        keypressed = function () end
     })
 
+    -- start the game when the player chooses a menu option
     state_machine.addTransition({
         from      = "start",
         to        = "run",
@@ -158,11 +149,12 @@ function love.load()
         end
     })
 
+    -- reset the game if there is a winner
     state_machine.addTransition({
         from      = "run",
         to        = "run",
         condition = function ()
-            return maze.getWinner() ~= nil
+            return maze.getWinner() ~= nil and state_machine.isSet(" ")
         end
     })
 
@@ -170,19 +162,23 @@ function love.load()
         from      = "stop",
         to        = "run",
         condition = function ()
-            return state_machine.isSet(" ")
+            return false
         end
     })
 
+    -- restart the game if the player presses space
     state_machine.addTransition({
         from      = "run",
         to        = "run",
         condition = function ()
-            return state_machine.isSet(" ")
+            return maze.getWinner() == nil and state_machine.isSet(" ")
         end
     })
 
-    love.update = state_machine.update
+    love.update     = state_machine.update
+    love.keypressed = state_machine.keypressed
+    love.draw       = state_machine.draw
+
     state_machine.start()
     --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
