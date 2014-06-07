@@ -46,8 +46,6 @@ Player = function (x, y)
     end
 
     local incrementScore = function (inc)
-        inspect({ name, inc })
-
         score = score + inc
     end
 

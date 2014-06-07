@@ -18,7 +18,6 @@ function math.round(val, decimal)
   return math.ceil(val * exp - 0.5) / exp
 end
 
-local time    = 0
 local score   = 0
 
 local RED    = { 200, 55, 0 }
@@ -29,12 +28,9 @@ W_WIDTH  = love.window.getWidth()
 W_HEIGHT = love.window.getHeight()
 
 SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
-COUNTDOWN_FONT = love.graphics.newFont("assets/Audiowide-Regular.ttf", 256)
 SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
 local main, maze, menu = {}
-local countdown = 3.5
-local bgm
 local maze_d, maze = 16
 local victory_message, results
 
@@ -44,8 +40,6 @@ global.map_height = global.tile_size * 2 * maze_d
 
 local origin = Point((W_WIDTH - global.map_width) / 2, (W_HEIGHT - global.map_height) / 2)
 local score_band
-
-local debounce = false
 
 local init = function ()
     maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
@@ -67,15 +61,6 @@ function main.draw()
     maze.draw()
     player.draw()
     score_band.draw()
-
-    if (maze.getWinner() ~= nil) then
-        -- draw the prompt
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.setFont(SPACE_FONT)
-        love.graphics.printf(victory_message, -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
-        love.graphics.setFont(SCORE_FONT)
-        love.graphics.printf(results, -10, W_HEIGHT / 2, W_WIDTH, "center")
-    end
 end
 
 function main.keypressed(key)
@@ -90,22 +75,11 @@ function main.update(dt)
     maze.updateScore(dt)
     player.updateScore(dt)
 
-    if maze.getWinner() ~= nil then return end
     if gameIsPaused then return end
 
     love.audio.update()
 
-    time = time + dt
-
     maze.update()
-    winner = maze.getWinner()
-
-    if (winner ~= nil) then
-        score_band.addStripe(winner.getColor())
-
-        victory_message = winner.getMessage()
-        results         = score_band.getResults()
-    end
 end
 
 function love.load()
@@ -140,6 +114,31 @@ function love.load()
         end,
     })
 
+    state_machine.addState({
+        name       = "win",
+        init       = function ()
+            local winner = maze.getWinner()
+            score_band.addStripe(winner.getColor())
+
+            victory_message = winner.getMessage()
+            results         = score_band.getResults()
+        end,
+        update = function (dt)
+            maze.updateScore(dt)
+            player.updateScore(dt)
+        end,
+        draw       = function ()
+            main.draw()
+
+            -- draw the prompt
+            love.graphics.setColor(255, 255, 255)
+            love.graphics.setFont(SPACE_FONT)
+            love.graphics.printf(victory_message, -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+            love.graphics.setFont(SCORE_FONT)
+            love.graphics.printf(results, -10, W_HEIGHT / 2, W_WIDTH, "center")
+        end
+    })
+
     -- start the game when the player chooses a menu option
     state_machine.addTransition({
         from      = "start",
@@ -152,9 +151,9 @@ function love.load()
     -- reset the game if there is a winner
     state_machine.addTransition({
         from      = "run",
-        to        = "run",
+        to        = "win",
         condition = function ()
-            return maze.getWinner() ~= nil and state_machine.isSet(" ")
+            return maze.getWinner() ~= nil
         end
     })
 
@@ -175,11 +174,19 @@ function love.load()
         end
     })
 
+    -- restart the game if the player presses space
+    state_machine.addTransition({
+        from      = "win",
+        to        = "run",
+        condition = function ()
+            return state_machine.isSet(" ")
+        end
+    })
+
     love.update     = state_machine.update
     love.keypressed = state_machine.keypressed
     love.draw       = state_machine.draw
 
     state_machine.start()
-    --bgm = love.audio.play("assets/Jarek_Laaser_-_Pump_It_Up.mp3", "stream", true) -- stream and loop background music
 end
 

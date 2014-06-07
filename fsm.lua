@@ -36,15 +36,18 @@ FSM = function ()
     local current_state = { name = "nil" }
 
     local transitionTo = function (next_state)
-        inspect({ from = current_state.name, to = next_state })
-        current_state = states[next_state]
+        -- TODO currently no states have cleanup steps, and I'm debating whether they need'em
+        -- most "cleanup steps" could be their own states with automatic transitions...
+        -- but that is kind of wordy... I'll decide after a refactor
+        if current_state.cleanup then current_state.cleanup() end
 
+        current_state = states[next_state]
         current_state.variables = {}
+
         if current_state.init then current_state.init() end
     end
 
     local update = function (dt)
-        if current_state.update then current_state.update(dt) end
 
         -- iterate over the transitions for the current state
         local next_state = {}
@@ -63,6 +66,8 @@ FSM = function ()
             -- exception!
             -- ambiguous state transition
         end
+
+        if current_state.update then current_state.update(dt) end
     end
 
     local draw = function ()
@@ -77,16 +82,6 @@ FSM = function ()
         -- transition to draw or win
         if (key == " ") then
             state_machine.set(key)
-
-        --  -- if the player has given up prematurely, they lose
-        --  if (winner == nil) then
-        --      winner = maze.lose()
-        --      score_band.addStripe(winner.getColor())
-        --      victory_message = "Dream Big!"
-        --      results = ""
-        --  else
-        --      init()
-        --  end
         end
 
         if current_state.keypressed then current_state.keypressed(key) end
@@ -109,7 +104,7 @@ FSM = function ()
     local addTransition = function(transition)
         table.insert(states[transition.from].transitions, {
             to        = transition.to,
-            condition = transition.condition
+            condition = transition.condition,
         })
     end
 
