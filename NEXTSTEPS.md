@@ -17,15 +17,12 @@ NEXTSTEPS
 [x] The Darkest Path! Score now depends on finding the darkest coloured path
 
 [x] finite state machine!
+[ ] refactor! I want the FSM to be super clear, we need a game loop file
 [ ] local multiplayer
+[ ] add the secret victory for players who actually WIN vs AI
 [ ] the dudes should leave a coloured echo trail behind them
+[x] fade background to black while end game message is showing (fade map only)
+
+[ ] the dudes should pulse to the music when they move, and take turns moving
 [ ] Music that slows down to a stop when you haven't earned points recently
     (basically it plays as long as the score counter is spinning)
-[ ] fade background to black while end game message is showing (fade map only)
-[ ] start the map zoomed out, and then zoom in to the dude
-
-[ ] add music, a countdown, and a taunt or two for losing
-[ ] the dudes should pulse to the music when they move, and take turns moving
-[ ] add a timer: if you take longer than 3 sec to make a move,
-    your opponent moves.
-    - maybe they just move every 3 sec regardless? With the music.

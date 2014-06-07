@@ -40,7 +40,7 @@ ScoreBand = function ()
             diff = math.abs(diff - v.score)
         end
 
-        return "|p - r| < " .. diff
+        return "|p1 - p2| < " .. diff
     end
 
     local draw = function ()

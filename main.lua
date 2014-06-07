@@ -4,9 +4,10 @@ global.scale = 1
 
 require "player"
 require "audio"
+require "game"
 require "maze"
 require "fsm"
-require "score_stripe"
+require "score_band"
 
 local i = require("vendor/inspect/inspect")
 inspect = function (a, b)
@@ -18,83 +19,30 @@ function math.round(val, decimal)
   return math.ceil(val * exp - 0.5) / exp
 end
 
-local score   = 0
-
-local RED    = { 200, 55, 0 }
-local GREEN  = { 0, 200, 55 }
-local BLUE   = { 55, 0, 200 }
-
-W_WIDTH  = love.window.getWidth()
-W_HEIGHT = love.window.getHeight()
-
-SCORE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 14)
-SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
-
-local main, maze, menu = {}
-local maze_d, maze = 16
 local victory_message, results
-
-global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
-global.map_width  = global.tile_size * 2 * maze_d
-global.map_height = global.tile_size * 2 * maze_d
-
-local origin = Point((W_WIDTH - global.map_width) / 2, (W_HEIGHT - global.map_height) / 2)
-local score_band
-
-local init = function ()
-    maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
-    player = Player(maze.getPixelX(0), maze.getPixelY(0))
-    player.setMessages({ "You Win!" })
-    maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
-
-    score_band.clear()
-    score_band.register(player)
-    score_band.register(maze)
-
-    maze.updateScore   = score_band.getScoreUpdater(maze)
-    player.updateScore = score_band.getScoreUpdater(player)
-end
 
 function love.focus(f) gameIsPaused = not f end
 
-function main.draw()
-    maze.draw()
-    player.draw()
-    score_band.draw()
-end
-
-function main.keypressed(key)
-    if (love.keyboard.isDown("w", "a", "s", "d")) then
-        -- TODO player2's moves go here
-    elseif (love.keyboard.isDown("down", "up", "right", "left")) then
-        maze.keypressed(key, player)
-    end
-end
-
-function main.update(dt)
-    maze.updateScore(dt)
-    player.updateScore(dt)
-
-    if gameIsPaused then return end
-
-    love.audio.update()
-
-    maze.update()
-end
-
 function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
+
     score_band = ScoreBand()
-    menu = {}
+    game       = Game()
+    menu       = {}
 
     state_machine = FSM()
 
     state_machine.addState({
         name       = "run",
-        init       = init,
-        draw       = main.draw,
-        update     = main.update,
-        keypressed = main.keypressed
+        init       = function ()
+            game.init(score_band)
+        end,
+        draw       = function ()
+            game.draw()
+            score_band.draw()
+        end,
+        update     = game.update,
+        keypressed = game.keypressed
     })
 
     state_machine.addState({
@@ -117,20 +65,22 @@ function love.load()
     state_machine.addState({
         name       = "win",
         init       = function ()
-            local winner = maze.getWinner()
-            score_band.addStripe(winner.getColor())
+            local winner = game.getWinner()
+            -- TODO find a better way to incorporate the stripe
+            --score_band.addStripe(winner.getColor())
 
             victory_message = winner.getMessage()
-            results         = score_band.getResults()
         end,
         update = function (dt)
-            maze.updateScore(dt)
+            game.updateScore(dt)
             player.updateScore(dt)
+            results         = score_band.getResults()
 
-            maze.fadeOut(dt)
+            game.flicker(dt)
         end,
         draw       = function ()
-            main.draw()
+            game.draw()
+            score_band.draw()
 
             -- draw the prompt
             love.graphics.setColor(255, 255, 255)
@@ -155,7 +105,7 @@ function love.load()
         from      = "run",
         to        = "win",
         condition = function ()
-            return maze.getWinner() ~= nil
+            return game.getWinner() ~= nil
         end
     })
 
@@ -172,7 +122,7 @@ function love.load()
         from      = "run",
         to        = "run",
         condition = function ()
-            return maze.getWinner() == nil and state_machine.isSet(" ")
+            return game.getWinner() == nil and state_machine.isSet(" ")
         end
     })
 
