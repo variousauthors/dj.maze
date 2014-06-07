@@ -16,11 +16,7 @@ NEXTSTEPS
 [x] revert the stripe bar to the old overall score mode
 [x] The Darkest Path! Score now depends on finding the darkest coloured path
 
-[ ] Try to make the colour change a little more continuous
-    right now the colours just go sharply from one to another,
-    so there isn't a clear path. I want random, but then adjusted
-    to make more sense (cause right now it is basically impossible)
-    [ ] This could depend on how well the player is doing
+[x] finite state machine!
 [ ] local multiplayer
 [ ] the dudes should leave a coloured echo trail behind them
 [ ] Music that slows down to a stop when you haven't earned points recently

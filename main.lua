@@ -126,6 +126,8 @@ function love.load()
         update = function (dt)
             maze.updateScore(dt)
             player.updateScore(dt)
+
+            maze.fadeOut(dt)
         end,
         draw       = function ()
             main.draw()

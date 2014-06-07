@@ -1,4 +1,5 @@
 local GOAL = 1*math.pow(10, -16) -- too small to affect the score ^o^//
+local MAX_BRIGHTNESS = 1000
 
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
@@ -6,6 +7,7 @@ Maze = function (x, y, width, height)
     local pixel_width  = offset_x + (width - 1)  * global.tile_size
     local pixel_height = offset_y + (height - 1) * global.tile_size
     local enemy, goal, winner
+    local brightness = MAX_BRIGHTNESS
 
     local getPixelX = function (x)
         return x * global.tile_size + offset_x
@@ -103,6 +105,13 @@ Maze = function (x, y, width, height)
         return winner
     end
 
+    -- TODO ha ha ha, this function totally looks rad because
+    -- of integer overflow. Yay integer overflow!
+    local fadeOut = function (dt)
+        local diff = MAX_BRIGHTNESS - brightness
+        brightness = brightness - diff - dt
+    end
+
     local update = function ()
         local goal_x = goal.getX() * global.tile_size + offset_x
         local goal_y = goal.getY() * global.tile_size + offset_y
@@ -127,7 +136,7 @@ Maze = function (x, y, width, height)
                 local red = 50 + 100*(math.pow(structure[row][col], 2))
                 local green = 50 + 100*(math.pow(structure[row][col], 1))
                 local blue = 50 + 100*(math.pow(structure[row][col], 1))
-                local color = { red, green, blue }
+                local color = { red, green, blue, brightness }
 
                 --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
@@ -342,6 +351,7 @@ Maze = function (x, y, width, height)
             lose       = lose,
             getScore   = getScore,
             getColor   = getColor,
+            fadeOut    = fadeOut,
             setMessages = setMessages
         }
     end
