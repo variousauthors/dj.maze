@@ -75,14 +75,8 @@ FSM = function ()
     end
 
     local keypressed = function (key)
-        if (key == "escape") then
-            love.event.quit()
-        end
-
         -- transition to draw or win
-        if (key == " ") then
-            state_machine.set(key)
-        end
+        state_machine.set(key)
 
         if current_state.keypressed then current_state.keypressed(key) end
     end

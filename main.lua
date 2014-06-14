@@ -56,7 +56,13 @@ function love.load()
             end)
         end,
         draw       = menu.draw,
-        keypressed = menu.keypressed,
+        keypressed = function (key)
+            if (key == "escape") then
+                love.event.quit()
+            end
+
+            menu.keypressed(key)
+        end,
         update     = menu.update
     })
     
@@ -132,6 +138,15 @@ function love.load()
         to        = "run",
         condition = function ()
             return game.getWinner() == nil and game.isAlone() and state_machine.isSet(" ")
+        end
+    })
+
+    -- return to the menu screen if any player presses escape
+    state_machine.addTransition({
+        from      = "run",
+        to        = "start",
+        condition = function ()
+            return game.getWinner() == nil and state_machine.isSet("escape")
         end
     })
 

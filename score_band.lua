@@ -56,7 +56,7 @@ ScoreBand = function ()
 
             --stripe_width = 20*v.score
 
-            if k.getName() == "red" then
+            if k.getName() == "player1" then
                 --offset_x    = -stripe_width
                 text_offset_y = global.tile_size * 1.5
             end

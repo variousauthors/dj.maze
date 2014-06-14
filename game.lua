@@ -29,7 +29,7 @@ Game = function ()
         if play_together == true then
             player2 = Player(maze.getPixelX(0), maze.getPixelY(0))
             player2.setColor(BLUE)
-            player2.setName("blue")
+            player2.setName("player2")
             maze.setEnemy(player2)
         end
 

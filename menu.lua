@@ -56,7 +56,12 @@ return function ()
     local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, arity_part)
 
     local draw = function ()
+        local r, g, b = love.graphics.getColor()
+        love.graphics.setColor({ 255, 255, 255 })
+
         component.draw(0, 0)
+
+        love.graphics.setColor({ r, g, b })
     end
 
     local update = function (dt)

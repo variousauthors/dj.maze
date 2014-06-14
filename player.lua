@@ -10,7 +10,7 @@ Player = function (x, y)
     local p      = Point(x, y)
     local message = ""
     local score = 0
-    local name = "red"
+    local name = "player1"
     local messager = Messager()
 
     local keypressed = function (key)
@@ -88,7 +88,7 @@ Enemy = function (x, y)
     local _keypressed           = player.keypressed
 
     player.setColor(BLUE)
-    player.setName("blue")
+    player.setName("player2")
 
     -- read the move list in reverse
     player.getNextMove = function ()
