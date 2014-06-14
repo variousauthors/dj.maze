@@ -15,14 +15,19 @@ NEXTSTEPS
 [x] add the colours and striped score bar
 [x] revert the stripe bar to the old overall score mode
 [x] The Darkest Path! Score now depends on finding the darkest coloured path
-
-[x] finite state machine!
-[ ] refactor! I want the FSM to be super clear, we need a game loop file
-[ ] local multiplayer
-[ ] add the secret victory for players who actually WIN vs AI
-[ ] the dudes should leave a coloured echo trail behind them
 [x] fade background to black while end game message is showing (fade map only)
+[x] finite state machine!
+[x] refactor! I want the FSM to be super clear, we need a game loop file
+[x] local multiplayer
 
-[ ] the dudes should pulse to the music when they move, and take turns moving
-[ ] Music that slows down to a stop when you haven't earned points recently
-    (basically it plays as long as the score counter is spinning)
+[ ] implement the alone/together menu and title screen
+[ ] it should be possible to enter the game late (P2 press "return") and ("Here comes a new challenger!")
+[ ] name entry for players (default "Red" vs "Green")
+[ ] it needs to be clear who is winning and what the final score is
+[ ] the dudes should leave a coloured echo trail behind them
+[ ] implement token input for single player
+[ ] Add gamejolt API
+[ ] add the secret victory (achievement) for players who actually WIN vs AI
+
+[ ] clever music
+[ ] better sprites
