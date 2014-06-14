@@ -5,14 +5,18 @@ local BLUE  = { 55, 55, 200 }
 local rnd = love.math.newRandomGenerator(os.time())
 
 Player = function (x, y, controls)
-    inspect(controls)
-    local radius = global.tile_size / 3
-    local color  = RED
-    local p      = Point(x, y)
-    local message = ""
-    local score = 0
-    local name = "player1"
-    local messager = Messager()
+    local radius    = global.tile_size / 3
+    local color     = RED
+    local p         = Point(x, y) -- pixels
+    local message   = ""
+    local score     = 0
+    local name      = "player1"
+    local messager  = Messager()
+    local echo_path = love.graphics.newCanvas()
+
+    local getEcho = function ()
+        return echo_path
+    end
 
     local keypressed = function (key)
         local did_move = true
@@ -34,6 +38,9 @@ Player = function (x, y, controls)
     end
 
     local draw = function ()
+        if love.graphics.isSupported("npot") then
+            love.graphics.draw(echo_path)
+        end
 
         r, g, b = love.graphics.getColor()
         love.graphics.setColor(color)
@@ -51,6 +58,22 @@ Player = function (x, y, controls)
 
     local getColor = function (c)
         return color
+    end
+
+    local updateEcho = function (x, y)
+        if love.graphics.isSupported("npot") then
+            love.graphics.setCanvas(echo_path)
+            love.graphics.push()
+            love.graphics.translate(global.tile_size/2, global.tile_size/2)
+            local r, g, b = love.graphics.getColor()
+
+            love.graphics.setColor(color)
+            love.graphics.line(x, y, p.getX(), p.getY())
+
+            love.graphics.setColor({ r, g, b })
+            love.graphics.pop()
+            love.graphics.setCanvas()
+        end
     end
 
     local incrementScore = function (inc)
@@ -85,7 +108,8 @@ Player = function (x, y, controls)
         update         = update,
         draw           = draw,
         keypressed     = keypressed,
-        isControl      = isControl
+        isControl      = isControl,
+        updateEcho     = updateEcho
     }
 end
 

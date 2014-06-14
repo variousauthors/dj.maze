@@ -63,6 +63,7 @@ Maze = function (x, y, width, height)
             player.setY(old_y)
         else
             player.incrementScore(getWeight(player.getX(), player.getY()))
+            player.updateEcho(old_x, old_y)
         end
 
         return moved
@@ -74,10 +75,14 @@ Maze = function (x, y, width, height)
 
         -- if the enemy is an AI, then get their move
         if enemy.getNextMove then
+            local old_x = enemy.getX()
+            local old_y = enemy.getY()
+
             key = enemy.getNextMove()
 
             if enemy.keypressed(key) then
                 enemy.incrementScore(getWeight(enemy.getX(), enemy.getY()))
+                enemy.updateEcho(old_x, old_y)
             end
         end
     end
