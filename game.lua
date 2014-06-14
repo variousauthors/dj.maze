@@ -13,7 +13,8 @@ Game = function ()
     SPACE_FONT     = love.graphics.newFont("assets/Audiowide-Regular.ttf", 64)
 
     local main, maze, menu = {}
-    local maze_d, maze = 16
+    local maze_d, maze     = 16
+    local play_together    = false
 
     global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
     global.map_width  = global.tile_size * 2 * maze_d
@@ -24,6 +25,14 @@ Game = function ()
     local init = function (score_band)
         maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
         player = Player(maze.getPixelX(0), maze.getPixelY(0))
+
+        if play_together == true then
+            player2 = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2))
+            player2.setColor(BLUE)
+            player2.setName("blue")
+            maze.setEnemy(player2)
+        end
+
         player.setMessages({ "You Win!" })
         maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
@@ -35,6 +44,10 @@ Game = function ()
         player.updateScore = score_band.getScoreUpdater(player)
     end
 
+    local playTogether = function ()
+        play_together = true
+    end
+
     local draw = function ()
         maze.draw()
         player.draw()
@@ -42,7 +55,9 @@ Game = function ()
 
     local keypressed = function (key)
         if (love.keyboard.isDown("w", "a", "s", "d")) then
-            -- TODO player2's moves go here
+            if (player2) then
+                maze.keypressed(key, player2)
+            end
         elseif (love.keyboard.isDown("down", "up", "right", "left")) then
             maze.keypressed(key, player)
         end
@@ -71,15 +86,25 @@ Game = function ()
         maze.updateScore(dt)
     end
 
+    local isAlone = function ()
+        local alone = true
+
+        if player2 ~= nil then alone = false end
+
+        return alone
+    end
+
     return {
-        draw        = draw,
-        update      = update,
-        keypressed  = keypressed,
-        init        = init,
-        getWinner   = getWinner,
-        flicker     = flicker,
-        updateScore = updateScore,
-        getWinner   = getWinner
+        draw         = draw,
+        update       = update,
+        keypressed   = keypressed,
+        init         = init,
+        getWinner    = getWinner,
+        flicker      = flicker,
+        updateScore  = updateScore,
+        getWinner    = getWinner,
+        isAlone      = isAlone,
+        playTogether = playTogether
     }
 
 end

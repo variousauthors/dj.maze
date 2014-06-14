@@ -16,10 +16,10 @@ Player = function (x, y)
     local keypressed = function (key)
         local did_move = true
 
-        if key == "down"      then p.setY(p.getY() + global.tile_size)
-        elseif key == "up"    then p.setY(p.getY() - global.tile_size)
-        elseif key == "right" then p.setX(p.getX() + global.tile_size)
-        elseif key == "left"  then p.setX(p.getX() - global.tile_size)
+        if key     == "down"  or key == "s" then p.setY(p.getY() + global.tile_size)
+        elseif key == "up"    or key == "w" then p.setY(p.getY() - global.tile_size)
+        elseif key == "right" or key == "d" then p.setX(p.getX() + global.tile_size)
+        elseif key == "left"  or key == "a" then p.setX(p.getX() - global.tile_size)
         else did_move = false end
 
         return did_move
@@ -91,7 +91,7 @@ Enemy = function (x, y)
     player.setName("blue")
 
     -- read the move list in reverse
-    local getNextMove = function ()
+    player.getNextMove = function ()
         local move = move_list[move_index]
 
         move_index = move_index + 1
@@ -101,12 +101,6 @@ Enemy = function (x, y)
 
     player.setMoveList = function (list)
         move_list = list
-    end
-
-    player.keypressed = function (key)
-
-        key = getNextMove()
-        return _keypressed(key)
     end
 
     return player

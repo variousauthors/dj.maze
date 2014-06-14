@@ -29,6 +29,7 @@ function love.load()
     score_band = ScoreBand()
     game       = Game()
     menu       = {}
+    menu.TOGETHER = " "
 
     state_machine = FSM()
 
@@ -96,6 +97,10 @@ function love.load()
         from      = "start",
         to        = "run",
         condition = function ()
+            if menu.choice == menu.TOGETHER then
+                game.playTogether()
+            end
+
             return menu.choice ~= nil
         end
     })
@@ -122,7 +127,7 @@ function love.load()
         from      = "run",
         to        = "run",
         condition = function ()
-            return game.getWinner() == nil and state_machine.isSet(" ")
+            return game.getWinner() == nil and game.isAlone() and state_machine.isSet(" ")
         end
     })
 

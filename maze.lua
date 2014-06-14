@@ -57,6 +57,7 @@ Maze = function (x, y, width, height)
             player.setX(old_x)
             player.setY(old_y)
         else
+            inspect({ player.getX(), player.getY() })
             player.incrementScore(getWeight(player.getX(), player.getY()))
         end
 
@@ -67,8 +68,13 @@ Maze = function (x, y, width, height)
     local keypressed = function (key, player)
         if not tryMove(player, key) then return end
 
-        if enemy.keypressed(key) then
-            enemy.incrementScore(getWeight(enemy.getX(), enemy.getY()))
+        -- if the enemy is an AI, then get their move
+        if enemy.getNextMove then
+            key = enemy.getNextMove()
+
+            if enemy.keypressed(key) then
+                enemy.incrementScore(getWeight(enemy.getX(), enemy.getY()))
+            end
         end
     end
 
@@ -117,7 +123,9 @@ Maze = function (x, y, width, height)
         local goal_y = goal.getY() * global.tile_size + offset_y
 
         if player.getX() == goal_x and player.getY() == goal_y then
-            winner = chooseWinner()
+            if enemy.getX() == goal_x and enemy.getY() == goal_y then
+                winner = chooseWinner()
+            end
         end
     end
 
@@ -357,13 +365,15 @@ Maze = function (x, y, width, height)
     end
 
     local obj = init()
---  while(path[width*height] == 1) do
---      obj = init()
---  end
 
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
     obj.getName = enemy.getName
+
+    obj.setEnemy = function (player)
+        -- replace the AI opponent with a player
+        enemy = player
+    end
 
     -- create a new table with n + n - 1 rows
     -- copy the existing table into the top or bottom
