@@ -57,7 +57,6 @@ Maze = function (x, y, width, height)
             player.setX(old_x)
             player.setY(old_y)
         else
-            inspect({ player.getX(), player.getY() })
             player.incrementScore(getWeight(player.getX(), player.getY()))
         end
 

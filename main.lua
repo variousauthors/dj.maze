@@ -8,6 +8,7 @@ require "game"
 require "maze"
 require "fsm"
 require "score_band"
+local Menu = require("menu")
 
 local i = require("vendor/inspect/inspect")
 inspect = function (a, b)
@@ -28,8 +29,7 @@ function love.load()
 
     score_band = ScoreBand()
     game       = Game()
-    menu       = {}
-    menu.TOGETHER = " "
+    menu       = Menu()
 
     state_machine = FSM()
 
@@ -48,12 +48,16 @@ function love.load()
 
     state_machine.addState({
         name       = "start",
-        draw       = function ()
-            love.graphics.printf("TITLE SCREEN", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+        init       = function ()
+            menu.show(function (options)
+                if options.arity == menu.TOGETHER then
+                    game.playTogether()
+                end
+            end)
         end,
-        keypressed = function (key)
-            menu.choice = key
-        end
+        draw       = menu.draw,
+        keypressed = menu.keypressed,
+        update     = menu.update
     })
     
     state_machine.addState({
@@ -101,7 +105,7 @@ function love.load()
                 game.playTogether()
             end
 
-            return menu.choice ~= nil
+            return not menu.isShowing()
         end
     })
 
