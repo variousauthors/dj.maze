@@ -52,7 +52,11 @@ function love.load()
             menu.show(function (options)
                 if options.arity == menu.TOGETHER then
                     game.playTogether()
+                else
+                    game.playAlone()
                 end
+
+                menu.reset()
             end)
         end,
         draw       = menu.draw,
@@ -99,6 +103,40 @@ function love.load()
             love.graphics.printf(victory_message, -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
             love.graphics.setFont(SCORE_FONT)
             love.graphics.printf(results, -10, W_HEIGHT / 2, W_WIDTH, "center")
+        end
+    })
+
+
+    local top_string_x    = 0
+    local bottom_string_x = 0
+    local timer           = 0
+
+    state_machine.addState({
+        name = "new_challenger",
+        init = function ()
+            top_string_x    = -W_WIDTH
+            bottom_string_x = W_WIDTH
+            timer           = 0
+            game.playTogether()
+        end,
+        draw = function ()
+            love.graphics.setFont(SPACE_FONT)
+            love.graphics.printf("HERE COMES A", top_string_x, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
+            love.graphics.printf("NEW CHALLENGER!", bottom_string_x, W_HEIGHT / 2, W_WIDTH, "center")
+        end,
+        update = function (dt)
+            timer = timer + dt
+            local step = dt*1500
+
+            if top_string_x < -10 then
+                top_string_x = top_string_x + step
+            end
+
+            if bottom_string_x > 10 then
+                bottom_string_x = bottom_string_x - step
+            end
+
+            inspect({ top_string_x, bottom_string_x })
         end
     })
 
@@ -156,6 +194,22 @@ function love.load()
         to        = "run",
         condition = function ()
             return state_machine.isSet(" ")
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "new_challenger",
+        to        = "run",
+        condition = function ()
+            return timer > 3
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "run",
+        to        = "new_challenger",
+        condition = function ()
+            return game.isAlone() and state_machine.isSet("return")
         end
     })
 

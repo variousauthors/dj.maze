@@ -29,6 +29,10 @@ Maze = function (x, y, width, height)
         return math.floor(((index - 1)/height) + 1), (index - 1)%width + 1
     end
 
+    local playTogether = function ()
+        return enemy.getNextMove == nil
+    end
+
     local colors = {
         solid_color = { 200, 55, 55 },
         floor_color = { 35, 35, 35},
@@ -129,6 +133,7 @@ Maze = function (x, y, width, height)
     end
 
     local draw = function ()
+        local r, g, b = love.graphics.getColor()
         love.graphics.push()
         love.graphics.scale(global.scale)
 
@@ -145,7 +150,6 @@ Maze = function (x, y, width, height)
                 local blue = 50 + 100*(math.pow(structure[row][col], 1))
                 local color = { red, green, blue, brightness }
 
-                --love.graphics.setColor(colors.floor_color)
                 love.graphics.setColor(color)
                 if goal  then love.graphics.setColor(colors.goal_color) end
 
@@ -156,6 +160,7 @@ Maze = function (x, y, width, height)
             end
         end
 
+        love.graphics.setColor({ r, g, b})
         enemy.draw()
         love.graphics.pop()
     end
@@ -349,17 +354,18 @@ Maze = function (x, y, width, height)
         path = shortestPath(adjacencies, 1, height * width)
 
         return {
-            draw       = draw,
-            update     = update,
-            keypressed = keypressed,
-            getPixelX  = getPixelX,
-            getPixelY  = getPixelY,
-            getWinner  = getWinner,
-            lose       = lose,
-            getScore   = getScore,
-            getColor   = getColor,
-            fadeOut    = fadeOut,
-            setMessages = setMessages
+            draw         = draw,
+            update       = update,
+            keypressed   = keypressed,
+            getPixelX    = getPixelX,
+            getPixelY    = getPixelY,
+            getWinner    = getWinner,
+            lose         = lose,
+            getScore     = getScore,
+            getColor     = getColor,
+            fadeOut      = fadeOut,
+            setMessages  = setMessages,
+            playTogether = playTogether
         }
     end
 
@@ -369,6 +375,7 @@ Maze = function (x, y, width, height)
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
     obj.getName = enemy.getName
+    obj.isMaze = true
 
     obj.setEnemy = function (player)
         -- replace the AI opponent with a player

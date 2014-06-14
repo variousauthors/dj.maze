@@ -1,6 +1,10 @@
 
 ScoreBand = function ()
     local band, score = {}, {}
+    local notice = {
+        player1 = "",
+        player2 = ""
+    }
     local stripe_width, stripe_height = 5, 20
 
     local addStripe = function (color)
@@ -49,8 +53,7 @@ ScoreBand = function ()
         for k, v in pairs(score) do
             local offset = 0
             local r, g, b = love.graphics.getColor()
-            local text_width = W_WIDTH / 8
-            local offset_x, text_align = 0, "left"
+            local offset_x = 0
             local text_offset_x = - global.map_width / 2 + global.tile_size / 2
             local text_offset_y = global.map_height + 2.5*global.tile_size
 
@@ -66,7 +69,19 @@ ScoreBand = function ()
 
             love.graphics.setColor(255, 255, 255)
             love.graphics.setFont(SCORE_FONT)
-            love.graphics.printf(v.score, center_line + text_offset_x, text_offset_y, text_width, text_align)
+            love.graphics.printf(v.score, center_line + text_offset_x, text_offset_y, W_WIDTH / 8, "left")
+
+            -- TODO this is dumb. Sometimes k is a player, sometimes it is a maze object.
+            -- it should just always be a player
+            if k.isMaze then
+                if k.playTogether() then
+                    love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                else
+                    love.graphics.printf(notice[k.getName()], center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                end
+            else
+                love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+            end
         end
 
         for index, stripe in ipairs(band) do
@@ -78,12 +93,17 @@ ScoreBand = function ()
         love.graphics.setColor({ r, g, b })
     end
 
+    local setNotice = function (key, text)
+        notice[key] = text
+    end
+
     return {
         draw            = draw,
         addStripe       = addStripe,
         getScoreUpdater = getScoreUpdater,
         register        = register,
         getResults      = getResults,
+        setNotice       = setNotice,
         clear           = clear
     }
 end

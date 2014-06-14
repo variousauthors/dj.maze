@@ -103,6 +103,8 @@ Enemy = function (x, y)
         move_list = list
     end
 
+    player.isAI = function () return true end
+
     return player
 end
 

@@ -26,19 +26,25 @@ Game = function ()
         maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
         player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2))
 
-        if play_together == true then
+        player.setMessages({ "You Win!" })
+        maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
+
+        if play_together then
             player2 = Player(maze.getPixelX(0), maze.getPixelY(0))
             player2.setColor(BLUE)
             player2.setName("player2")
             maze.setEnemy(player2)
         end
 
-        player.setMessages({ "You Win!" })
-        maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
-
         score_band.clear()
         score_band.register(player)
         score_band.register(maze)
+
+        if play_together then
+            score_band.setNotice("player2", "")
+        else
+            score_band.setNotice("player2", "press return")
+        end
 
         maze.updateScore   = score_band.getScoreUpdater(maze)
         player.updateScore = score_band.getScoreUpdater(player)
@@ -46,6 +52,10 @@ Game = function ()
 
     local playTogether = function ()
         play_together = true
+    end
+
+    local playAlone = function ()
+        play_together = false
     end
 
     local draw = function ()
@@ -87,11 +97,7 @@ Game = function ()
     end
 
     local isAlone = function ()
-        local alone = true
-
-        if player2 ~= nil then alone = false end
-
-        return alone
+        return play_together == false
     end
 
     return {
@@ -104,7 +110,8 @@ Game = function ()
         updateScore  = updateScore,
         getWinner    = getWinner,
         isAlone      = isAlone,
-        playTogether = playTogether
+        playTogether = playTogether,
+        playAlone    = playAlone
     }
 
 end

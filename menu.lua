@@ -103,6 +103,10 @@ return function ()
         end
     end
 
+    local reset = function ()
+        play_together = false
+    end
+
     return {
         draw           = draw,
         update         = update,
@@ -111,6 +115,7 @@ return function ()
         show           = show,
         hide           = hide,
         isShowing      = isShowing,
+        reset          = reset,
 
         TOGETHER       = "together"
     }
