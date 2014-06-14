@@ -3,11 +3,12 @@ local MAX_BRIGHTNESS = 1000
 
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
-    local offset_x, offset_y = x, y
-    local pixel_width  = offset_x + (width - 1)  * global.tile_size
-    local pixel_height = offset_y + (height - 1) * global.tile_size
     local enemy, goal, winner
-    local brightness = MAX_BRIGHTNESS
+
+    local offset_x, offset_y = x, y
+    local pixel_width        = offset_x + (width - 1)  * global.tile_size
+    local pixel_height       = offset_y + (height - 1) * global.tile_size
+    local brightness, timer  = MAX_BRIGHTNESS, 0
 
     local getPixelX = function (x)
         return x * global.tile_size + offset_x
@@ -121,7 +122,8 @@ Maze = function (x, y, width, height)
         brightness = brightness - diff - dt
     end
 
-    local update = function ()
+    local update = function (dt)
+        timer = timer + dt
         local goal_x = goal.getX() * global.tile_size + offset_x
         local goal_y = goal.getY() * global.tile_size + offset_y
 

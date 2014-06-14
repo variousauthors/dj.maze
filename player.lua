@@ -4,7 +4,8 @@ local RED   = { 200, 55, 55 }
 local BLUE  = { 55, 55, 200 }
 local rnd = love.math.newRandomGenerator(os.time())
 
-Player = function (x, y)
+Player = function (x, y, controls)
+    inspect(controls)
     local radius = global.tile_size / 3
     local color  = RED
     local p      = Point(x, y)
@@ -16,13 +17,20 @@ Player = function (x, y)
     local keypressed = function (key)
         local did_move = true
 
-        if key     == "down"  or key == "s" then p.setY(p.getY() + global.tile_size)
-        elseif key == "up"    or key == "w" then p.setY(p.getY() - global.tile_size)
-        elseif key == "right" or key == "d" then p.setX(p.getX() + global.tile_size)
-        elseif key == "left"  or key == "a" then p.setX(p.getX() - global.tile_size)
+        if     key == controls.down  then p.setY(p.getY() + global.tile_size)
+        elseif key == controls.up    then p.setY(p.getY() - global.tile_size)
+        elseif key == controls.right then p.setX(p.getX() + global.tile_size)
+        elseif key == controls.left  then p.setX(p.getX() - global.tile_size)
         else did_move = false end
 
         return did_move
+    end
+
+    local isControl = function (key)
+        return key == controls.down
+            or key == controls.up
+            or key == controls.left
+            or key == controls.right
     end
 
     local draw = function ()
@@ -76,14 +84,20 @@ Player = function (x, y)
         getName        = getName,
         update         = update,
         draw           = draw,
-        keypressed     = keypressed
+        keypressed     = keypressed,
+        isControl      = isControl
     }
 end
 
 Enemy = function (x, y)
     -- the difference between player and AI is usually just
     -- a matter of circumstance
-    local player                = Player(x, y)
+    local player = Player(x, y, {
+        down  = "down",
+        up    = "up",
+        left  = "left",
+        right = "right"
+    })
     local move_index, move_list = 1
     local _keypressed           = player.keypressed
 

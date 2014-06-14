@@ -24,13 +24,17 @@ Game = function ()
 
     local init = function (score_band)
         maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
-        player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2))
+        player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2), {
+            down = "down", up = "up", left = "left", right = "right"
+        })
 
         player.setMessages({ "You Win!" })
         maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
         if play_together then
-            player2 = Player(maze.getPixelX(0), maze.getPixelY(0))
+            player2 = Player(maze.getPixelX(0), maze.getPixelY(0), {
+                down = "s", up = "w", left = "a", right = "d"
+            })
             player2.setColor(BLUE)
             player2.setName("player2")
             maze.setEnemy(player2)
@@ -64,11 +68,13 @@ Game = function ()
     end
 
     local keypressed = function (key)
-        if (love.keyboard.isDown("w", "a", "s", "d")) then
+        if play_together and player2.isControl(key) then
             if (player2) then
                 maze.keypressed(key, player2)
             end
-        elseif (love.keyboard.isDown("down", "up", "right", "left")) then
+        end
+
+        if player.isControl(key) then
             maze.keypressed(key, player)
         end
     end
@@ -81,7 +87,7 @@ Game = function ()
 
         love.audio.update()
 
-        maze.update()
+        maze.update(dt)
     end
 
     local getWinner = function ()
