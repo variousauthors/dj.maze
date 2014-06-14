@@ -21,10 +21,10 @@ NEXTSTEPS
 [x] local multiplayer
 
 [x] implement the alone/together menu and title screen
-[ ] it should be possible to enter the game late (P2 press "return") and ("Here comes a new challenger!")
-[ ] name entry for players (default "Red" vs "Green")
-[ ] it needs to be clear who is winning and what the final score is
+[x] it should be possible to enter the game late (P2 press "return") and ("Here comes a new challenger!")
 [ ] the dudes should leave a coloured echo trail behind them
+[ ] it needs to be clear who is winning and what the final score is
+[ ] name entry for players (default "Red" vs "Green")
 [ ] implement token input for single player
 [ ] Add gamejolt API
 [ ] add the secret victory (achievement) for players who actually WIN vs AI

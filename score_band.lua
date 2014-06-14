@@ -1,6 +1,7 @@
 
 ScoreBand = function ()
     local band, score = {}, {}
+    local timer = 0
     local notice = {
         player1 = "",
         player2 = ""
@@ -29,6 +30,7 @@ ScoreBand = function ()
     local getScoreUpdater = function (entity)
 
         return function (dt)
+            timer = timer + dt
             local rate = 10*math.abs(score[entity].score - entity.getScore())
 
             if score[entity].score < entity.getScore() then
@@ -77,7 +79,9 @@ ScoreBand = function ()
                 if k.playTogether() then
                     love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
                 else
-                    love.graphics.printf(notice[k.getName()], center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                    if math.floor(timer)%2 == 0 then
+                        love.graphics.printf(notice[k.getName()], center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                    end
                 end
             else
                 love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
