@@ -222,10 +222,10 @@ Maze = function (x, y, width, height)
     end
 
     local instructionFromRowCol = function (frow, fcol, trow, tcol)
-        if     frow > trow then return "down"
-        elseif frow < trow then return "up"
-        elseif fcol > tcol then return "right"
-        elseif fcol < tcol then return "left"
+        if     frow > trow then return "up"
+        elseif frow < trow then return "down"
+        elseif fcol > tcol then return "left"
+        elseif fcol < tcol then return "right"
         end
     end
 
@@ -365,6 +365,7 @@ Maze = function (x, y, width, height)
 
     local obj = init()
 
+    -- this is the enemy's position for their initial calculations
     enemy = Enemy(getPixelX(width - 1), getPixelY(height - 1))
     enemy.setMoveList(moveListFromPath(path))
     obj.getName = enemy.getName
@@ -462,8 +463,8 @@ Maze = function (x, y, width, height)
     structure = axialMirrorCols(structure, "left")
 
     -- after mirroring, the AI's starting position must be changed to the new corner
-    enemy.setX(getPixelX(width - 1))
-    enemy.setY(getPixelY(height - 1))
+    enemy.setX(getPixelX(0))
+    enemy.setY(getPixelY(0))
 
     pixel_width  = offset_x + (width - 1)  * global.tile_size
     pixel_height = offset_y + (height - 1) * global.tile_size

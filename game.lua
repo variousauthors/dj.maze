@@ -24,10 +24,10 @@ Game = function ()
 
     local init = function (score_band)
         maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
-        player = Player(maze.getPixelX(0), maze.getPixelY(0))
+        player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2))
 
         if play_together == true then
-            player2 = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2))
+            player2 = Player(maze.getPixelX(0), maze.getPixelY(0))
             player2.setColor(BLUE)
             player2.setName("blue")
             maze.setEnemy(player2)

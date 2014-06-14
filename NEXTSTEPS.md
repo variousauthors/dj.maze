@@ -20,7 +20,7 @@ NEXTSTEPS
 [x] refactor! I want the FSM to be super clear, we need a game loop file
 [x] local multiplayer
 
-[ ] implement the alone/together menu and title screen
+[x] implement the alone/together menu and title screen
 [ ] it should be possible to enter the game late (P2 press "return") and ("Here comes a new challenger!")
 [ ] name entry for players (default "Red" vs "Green")
 [ ] it needs to be clear who is winning and what the final score is
@@ -31,3 +31,9 @@ NEXTSTEPS
 
 [ ] clever music
 [ ] better sprites
+
+[ ] options to setup the controls
+
+BUG
+[ ] If the player backtracks and then shadows the opponent for the rest of the
+    game, they can win. This should be impossible: why isn't my AI backtracking?
