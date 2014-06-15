@@ -1,5 +1,9 @@
-local GOAL = 1*math.pow(10, -16) -- too small to affect the score ^o^//
+local GOAL           = 1*math.pow(10, -16) -- too small to affect the score ^o^//
 local MAX_BRIGHTNESS = 1000
+local weight_scale   = 3
+local visual_scale   = 1
+local FULL           = 100
+local ADJUST         = 50
 
 Maze = function (x, y, width, height)
     local structure, adjacencies, path
@@ -62,6 +66,7 @@ Maze = function (x, y, width, height)
             player.setX(old_x)
             player.setY(old_y)
         else
+            print(getWeight(player.getX(), player.getY()))
             player.incrementScore(getWeight(player.getX(), player.getY()))
             player.updateEcho(old_x, old_y)
         end
@@ -159,9 +164,9 @@ Maze = function (x, y, width, height)
 
                 local goal  = structure[row][col] == GOAL
 
-                local red = 50 + 100*(math.pow(structure[row][col], 2))
-                local green = 50 + 100*(math.pow(structure[row][col], 1))
-                local blue = 50 + 100*(math.pow(structure[row][col], 1))
+                local red   = ADJUST + (FULL-20)*(math.pow(structure[row][col], visual_scale))
+                local green = ADJUST + (FULL)*(math.pow(structure[row][col], visual_scale))
+                local blue  = ADJUST + (FULL)*(math.pow(structure[row][col], visual_scale))
                 local color = { red, green, blue, brightness }
 
                 love.graphics.setColor(color)
@@ -278,28 +283,9 @@ Maze = function (x, y, width, height)
             -- try weight inversely proportional to
             -- product of indices
             for j = 1, width do
-                local r = (1 - 1/(i*j))                   -- distance from bottom right corner
-                local _r = (1 - 1/(width*height - i*j))   -- distance from top left corner
-                local c = math.abs(1 + i - j)             -- distance from center line y = -x + height
-                c = math.abs(width/2 - c)                 -- distance from stripes y = -x + height +/- height/2
-                c = c/(width/2)
-                local p = 1/math.abs(width - (i + j)) -- distance from the center line y = x
-
-                -- TODO any of these could be zero...
-
-                -- local weight = r*_r*c*rng:random()*0.4
-                -- local weight = _r*r*0.5
-                -- local weight = c*0.3*(r*_r)
-                local weight = c
-
                 local n = rng:random()
-                structure[i][j] = math.pow(n, 3)
 
-              --if n < weight then
-              --    structure[i][j] = 1
-              --else
-              --    structure[i][j] = 0
-              --end
+                structure[i][j] = math.pow(n, weight_scale)
             end
         end
 
