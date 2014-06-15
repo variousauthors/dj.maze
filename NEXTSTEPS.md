@@ -26,12 +26,15 @@ NEXTSTEPS
 [x] player 1's score should be on the bottom
 [x] "you win" should be replaced with "player2 wins" in multiplayer
 [x] add the lumines unit
-[ ] it needs to be clear who is winning and what the final score is
 [ ] name entry for players (default "Red" vs "Green")
 [ ] implement token input for single player
 [ ] Add gamejolt API
 [ ] add the secret victory (achievement) for players who actually WIN vs AI
 
+[ ] Deadly game mode, in which you brighten the path you take,
+    so that there is an element of urgency. A player can't just trace
+    her opponent.
+[ ] consider additional indicators for who is winning. Such as brightness
 [ ] clever music
 [ ] better sprites
 

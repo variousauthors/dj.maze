@@ -77,7 +77,6 @@ function love.load()
             -- TODO find a better way to incorporate the stripe
             --score_band.addStripe(winner.getColor())
 
-            inspect(winner)
             victory_message = winner.getMessage()
         end,
         update = function (dt)
@@ -137,8 +136,6 @@ function love.load()
             if bottom_string_x > 10 then
                 bottom_string_x = bottom_string_x - step
             end
-
-            inspect({ top_string_x, bottom_string_x })
         end
     })
 
@@ -187,7 +184,7 @@ function love.load()
         from      = "win",
         to        = "run",
         condition = function ()
-            return state_machine.isSet(" ")
+            return state_machine.isSet(" ") or state_machine.isSet("return")
         end
     })
 

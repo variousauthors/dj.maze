@@ -1,7 +1,7 @@
 require "vector"
 
-local RED   = { 200, 55, 55 }
-local BLUE  = { 55, 55, 200 }
+local RED   = { 200, 200, 55 }
+local GREEN = { 55, 200, 55 }
 local rnd = love.math.newRandomGenerator(os.time())
 
 Player = function (x, y, controls)
@@ -125,7 +125,7 @@ Enemy = function (x, y)
     local move_index, move_list = 1
     local _keypressed           = player.keypressed
 
-    player.setColor(BLUE)
+    player.setColor(GREEN)
     player.setName("player2")
 
     -- read the move list in reverse

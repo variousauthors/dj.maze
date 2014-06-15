@@ -37,7 +37,7 @@ Maze = function (x, y, width, height)
     local colors = {
         solid_color = { 200, 55, 55 },
         floor_color = { 35, 35, 35},
-        goal_color  = { 55, 200, 55 }
+        goal_color  = { 0, 0, 0 }
     }
 
     local getWeight = function (x, y)
