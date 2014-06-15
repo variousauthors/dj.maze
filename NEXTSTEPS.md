@@ -23,9 +23,9 @@ NEXTSTEPS
 [x] implement the alone/together menu and title screen
 [x] it should be possible to enter the game late (P2 press "return") and ("Here comes a new challenger!")
 [x] the dudes should leave a coloured echo trail behind them
-[ ] player 1's score should be on the bottom
-[ ] "you win" should be replaced with "player2 wins" in multiplayer
-[ ] add the lumines unit
+[x] player 1's score should be on the bottom
+[x] "you win" should be replaced with "player2 wins" in multiplayer
+[x] add the lumines unit
 [ ] it needs to be clear who is winning and what the final score is
 [ ] name entry for players (default "Red" vs "Green")
 [ ] implement token input for single player

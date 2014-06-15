@@ -39,14 +39,30 @@ ScoreBand = function ()
         end
     end
 
-    local getResults = function ()
+    local getDifference = function ()
         local diff = 0
 
         for k, v in pairs(score) do
             diff = math.abs(diff - v.score)
         end
 
-        return "|p1 - p2| < " .. diff
+        return "|p1 - p2| < " .. diff .. " lm"
+    end
+
+    local getResults = function (winner, loser)
+        local diff = 0
+        local win, lose = "p1", "p2"
+
+        if winner.getName() == "player2" then
+            win  = "p2"
+            lose = "p1"
+        end
+
+        for k, v in pairs(score) do
+            diff = math.abs(diff - v.score)
+        end
+
+        return lose .. " > " .. win .. " + " .. diff .. " lm"
     end
 
     local draw = function ()
@@ -61,7 +77,7 @@ ScoreBand = function ()
 
             --stripe_width = 20*v.score
 
-            if k.getName() == "player1" then
+            if k.getName() == "player2" then
                 --offset_x    = -stripe_width
                 text_offset_y = global.tile_size * 1.5
             end
@@ -71,7 +87,7 @@ ScoreBand = function ()
 
             love.graphics.setColor(255, 255, 255)
             love.graphics.setFont(SCORE_FONT)
-            love.graphics.printf(v.score, center_line + text_offset_x, text_offset_y, W_WIDTH / 8, "left")
+            love.graphics.printf(v.score .. " lm", center_line + text_offset_x, text_offset_y, W_WIDTH / 4, "left")
 
             -- TODO this is dumb. Sometimes k is a player, sometimes it is a maze object.
             -- it should just always be a player
@@ -107,6 +123,7 @@ ScoreBand = function ()
         getScoreUpdater = getScoreUpdater,
         register        = register,
         getResults      = getResults,
+        getDifference   = getDifference,
         setNotice       = setNotice,
         clear           = clear
     }

@@ -99,8 +99,13 @@ Maze = function (x, y, width, height)
         return winner
     end
 
+    local getLoser = function ()
+        return loser
+    end
+
     local lose = function ()
         winner = enemy
+        loser  = player
 
         return enemy
     end
@@ -110,11 +115,13 @@ Maze = function (x, y, width, height)
     end
 
     local chooseWinner = function ()
-        local winner = player
+        winner = player
+        loser  = enemy
 
         -- whoever has collected the most weight loses
         if enemy.getScore() < player.getScore() then
             winner = enemy
+            loser  = player
         end
 
         return winner
@@ -367,6 +374,7 @@ Maze = function (x, y, width, height)
             getPixelX    = getPixelX,
             getPixelY    = getPixelY,
             getWinner    = getWinner,
+            getLoser     = getLoser,
             lose         = lose,
             getScore     = getScore,
             getColor     = getColor,

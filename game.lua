@@ -37,6 +37,8 @@ Game = function ()
             })
             player2.setColor(BLUE)
             player2.setName("player2")
+            player2.setMessages({ player2.getName() .. " Wins!" })
+            player.setMessages({ player.getName() .. " Wins!" })
             maze.setEnemy(player2)
         end
 
@@ -94,6 +96,10 @@ Game = function ()
         return maze.getWinner()
     end
 
+    local getLoser = function ()
+        return maze.getLoser()
+    end
+
     local flicker = function (dt)
         maze.fadeOut(dt)
     end
@@ -112,6 +118,7 @@ Game = function ()
         keypressed   = keypressed,
         init         = init,
         getWinner    = getWinner,
+        getLoser     = getLoser,
         flicker      = flicker,
         updateScore  = updateScore,
         getWinner    = getWinner,

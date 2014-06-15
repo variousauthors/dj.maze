@@ -71,25 +71,27 @@ function love.load()
     })
     
     state_machine.addState({
-        name       = "stop",
-        draw       = function ()
-            love.graphics.printf("WAT", -10, W_HEIGHT / 2 - global.tile_size * 5.5, W_WIDTH, "center")
-        end,
-    })
-
-    state_machine.addState({
         name       = "win",
         init       = function ()
             local winner = game.getWinner()
             -- TODO find a better way to incorporate the stripe
             --score_band.addStripe(winner.getColor())
 
+            inspect(winner)
             victory_message = winner.getMessage()
         end,
         update = function (dt)
+            local winner = game.getWinner()
+            local loser  = game.getLoser()
+
             game.updateScore(dt)
             player.updateScore(dt)
-            results         = score_band.getResults()
+            
+            if game.isAlone() then
+                results         = score_band.getDifference()
+            else
+                results         = score_band.getResults(winner, loser)
+            end
 
             game.flicker(dt)
         end,
@@ -159,14 +161,6 @@ function love.load()
         to        = "win",
         condition = function ()
             return game.getWinner() ~= nil
-        end
-    })
-
-    state_machine.addTransition({
-        from      = "stop",
-        to        = "run",
-        condition = function ()
-            return false
         end
     })
 
