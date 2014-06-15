@@ -87,7 +87,7 @@ ScoreBand = function ()
 
             love.graphics.setColor(255, 255, 255)
             love.graphics.setFont(SCORE_FONT)
-            love.graphics.printf(v.score .. " lm", center_line + text_offset_x, text_offset_y, W_WIDTH / 4, "left")
+            love.graphics.printf(v.score .. " lm", center_line + text_offset_x, text_offset_y, W_WIDTH / 2, "left")
 
             -- TODO this is dumb. Sometimes k is a player, sometimes it is a maze object.
             -- it should just always be a player

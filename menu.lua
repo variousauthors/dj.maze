@@ -88,7 +88,7 @@ return function ()
     end
 
     local keypressed = function (key)
-        if key == "return" then
+        if key == "return" or key == " " then
             hide()
         end
 
