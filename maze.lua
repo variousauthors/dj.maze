@@ -51,6 +51,20 @@ Maze = function (x, y, width, height)
         return structure[row][col]
     end
 
+    local setWeight = function (x, y, weight)
+        local col, row = getTileX(x), getTileY(y)
+
+        print("===")
+        inspect({ col, row })
+        inspect({ width - col + 1, row })
+        inspect({ col, height - row + 1 })
+        inspect({ width - col + 1, height - row + 1 })
+        structure[row][col]                          = math.min(weight, 1)
+        structure[height - row + 1][col]             = math.min(weight, 1)
+        structure[row][width - col + 1]              = math.min(weight, 1)
+        structure[height - row + 1][width - col + 1] = math.min(weight, 1)
+    end
+
     -- offset_x < player.getX() < offset_x + width * global.tile_size
     local tryMove = function (player, key)
         local old_x = player.getX()
@@ -67,8 +81,11 @@ Maze = function (x, y, width, height)
             player.setX(old_x)
             player.setY(old_y)
         else
-            print(getWeight(player.getX(), player.getY()))
+            local old_weight = getWeight(old_x, old_y)
             player.incrementScore(getWeight(player.getX(), player.getY()))
+            if dynamic_mode == true then
+                setWeight(old_x, old_y, old_weight * 2)
+            end
             player.updateEcho(old_x, old_y)
         end
 
@@ -87,7 +104,11 @@ Maze = function (x, y, width, height)
             key = enemy.getNextMove()
 
             if enemy.keypressed(key) then
+                local old_weight = getWeight(old_x, old_y)
                 enemy.incrementScore(getWeight(enemy.getX(), enemy.getY()))
+                if dynamic_mode == true then
+                    setWeight(old_x, old_y, old_weight * 2)
+                end
                 enemy.updateEcho(old_x, old_y)
             end
         end
@@ -138,6 +159,10 @@ Maze = function (x, y, width, height)
     local fadeOut = function (dt)
         local diff = MAX_BRIGHTNESS - brightness
         brightness = brightness - diff - dt
+    end
+
+    local dynamicMode = function ()
+        dynamic_mode = true
     end
 
     local update = function (dt)
@@ -365,6 +390,7 @@ Maze = function (x, y, width, height)
             lose         = lose,
             getScore     = getScore,
             getColor     = getColor,
+            dynamicMode  = dynamicMode,
             fadeOut      = fadeOut,
             setMessages  = setMessages,
             playTogether = playTogether
