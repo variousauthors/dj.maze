@@ -3,6 +3,14 @@ Game = function ()
     local score     = 0
     local variables = {}
 
+    local set = function (key, value)
+        variables[key] = value
+    end
+
+    local get = function (key)
+        return variables[key]
+    end
+
     local RED    = { 200, 55, 0 }
     local GREEN  = { 0, 200, 55 }
     local BLUE   = { 55, 0, 200 }
@@ -15,7 +23,6 @@ Game = function ()
 
     local main, maze, menu = {}
     local maze_d, maze     = 16
-    local play_together    = false
 
     global.tile_size  = math.min(W_WIDTH, W_HEIGHT - 100)/(2*maze_d)
     global.map_width  = global.tile_size * 2 * maze_d
@@ -32,7 +39,7 @@ Game = function ()
         player.setMessages({ "You Win!" })
         maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
-        if play_together then
+        if get("together") then
             player2 = Player(maze.getPixelX(0), maze.getPixelY(0), {
                 down = "s", up = "w", left = "a", right = "d"
             })
@@ -43,11 +50,15 @@ Game = function ()
             maze.setEnemy(player2)
         end
 
+        if get("dynamic") then
+            maze.dynamicMode(true)
+        end
+
         score_band.clear()
         score_band.register(player)
         score_band.register(maze)
 
-        if play_together then
+        if get("together") then
             score_band.setNotice("player2", "")
         else
             score_band.setNotice("player2", "press return")
@@ -57,21 +68,13 @@ Game = function ()
         player.updateScore = score_band.getScoreUpdater(player)
     end
 
-    local set = function (key, value)
-        variables[key] = value
-    end
-
-    local get = function (key)
-        return variables[key]
-    end
-
     local draw = function ()
         maze.draw()
         player.draw()
     end
 
     local keypressed = function (key)
-        if play_together and player2.isControl(key) then
+        if get("together") and player2.isControl(key) then
             if (player2) then
                 maze.keypressed(key, player2)
             end
@@ -110,7 +113,11 @@ Game = function ()
     end
 
     local isAlone = function ()
-        return get("alone")
+        return not get("together")
+    end
+
+    local playTogether = function ()
+        set("together", true)
     end
 
     return {
@@ -124,6 +131,7 @@ Game = function ()
         updateScore = updateScore,
         getWinner   = getWinner,
         isAlone     = isAlone,
+        playTogether = playTogether,
         get         = get,
         set         = set
     }

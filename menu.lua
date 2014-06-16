@@ -8,7 +8,8 @@ return function ()
     local showing       = false
     local hide_callback = function () end
     local cursor_pos    = 0
-    local choice         = "alone"
+    local choice        = "alone"
+    local mode          = "dynamic"
     local menu_index    = 0
     local time, flash   = 0, 0
 
@@ -87,7 +88,7 @@ return function ()
     end
 
     local hide = function ()
-        if hide_callback then hide_callback({ choice = choice }) end
+        if hide_callback then hide_callback({ arity = choice, mode = mode }) end
         showing = false
     end
 

@@ -51,8 +51,12 @@ function love.load()
     state_machine.addState({
         name       = "start",
         init       = function ()
+            game.set("together", nil)
+            game.set("dynamic", nil)
+
             menu.show(function (options)
-                game.set(options.choice, true)
+                game.set(options.arity, true)
+                game.set(options.mode, true)
 
                 menu.reset()
             end)
@@ -156,10 +160,6 @@ function love.load()
         from      = "start",
         to        = "run",
         condition = function ()
-            if menu.choice == menu.TOGETHER then
-                game.playTogether()
-            end
-
             return not menu.isShowing() and not game.get("gamejolt")
         end
     })
