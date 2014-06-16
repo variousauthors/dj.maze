@@ -1,6 +1,7 @@
 
 Game = function ()
-    local score   = 0
+    local score     = 0
+    local variables = {}
 
     local RED    = { 200, 55, 0 }
     local GREEN  = { 0, 200, 55 }
@@ -35,7 +36,7 @@ Game = function ()
             player2 = Player(maze.getPixelX(0), maze.getPixelY(0), {
                 down = "s", up = "w", left = "a", right = "d"
             })
-            player2.setColor(BLUE)
+            player2.setColor(GREEN)
             player2.setName("player2")
             player2.setMessages({ player2.getName() .. " Wins!" })
             player.setMessages({ player.getName() .. " Wins!" })
@@ -56,12 +57,12 @@ Game = function ()
         player.updateScore = score_band.getScoreUpdater(player)
     end
 
-    local playTogether = function ()
-        play_together = true
+    local set = function (key, value)
+        variables[key] = value
     end
 
-    local playAlone = function ()
-        play_together = false
+    local get = function (key)
+        return variables[key]
     end
 
     local draw = function ()
@@ -109,22 +110,22 @@ Game = function ()
     end
 
     local isAlone = function ()
-        return play_together == false
+        return get("alone")
     end
 
     return {
-        draw         = draw,
-        update       = update,
-        keypressed   = keypressed,
-        init         = init,
-        getWinner    = getWinner,
-        getLoser     = getLoser,
-        flicker      = flicker,
-        updateScore  = updateScore,
-        getWinner    = getWinner,
-        isAlone      = isAlone,
-        playTogether = playTogether,
-        playAlone    = playAlone
+        draw        = draw,
+        update      = update,
+        keypressed  = keypressed,
+        init        = init,
+        getWinner   = getWinner,
+        getLoser    = getLoser,
+        flicker     = flicker,
+        updateScore = updateScore,
+        getWinner   = getWinner,
+        isAlone     = isAlone,
+        get         = get,
+        set         = set
     }
 
 end

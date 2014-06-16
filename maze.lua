@@ -1,8 +1,9 @@
 local GOAL           = 1*math.pow(10, -16) -- too small to affect the score ^o^//
 local MAX_BRIGHTNESS = 1000
 local weight_scale   = 3
-local visual_scale   = 1
+local visual_scale   = { r = 2, g = 1, b = 1 }
 local FULL           = 100
+local adjust         = { r = 0, g = 0, b = 0 }
 local ADJUST         = 50
 
 Maze = function (x, y, width, height)
@@ -164,9 +165,9 @@ Maze = function (x, y, width, height)
 
                 local goal  = structure[row][col] == GOAL
 
-                local red   = ADJUST + (FULL-20)*(math.pow(structure[row][col], visual_scale))
-                local green = ADJUST + (FULL)*(math.pow(structure[row][col], visual_scale))
-                local blue  = ADJUST + (FULL)*(math.pow(structure[row][col], visual_scale))
+                local red   = ADJUST + (FULL-adjust.r)*(math.pow(structure[row][col], visual_scale.r))
+                local green = ADJUST + (FULL-adjust.g)*(math.pow(structure[row][col], visual_scale.g))
+                local blue  = ADJUST + (FULL-adjust.b)*(math.pow(structure[row][col], visual_scale.b))
                 local color = { red, green, blue, brightness }
 
                 love.graphics.setColor(color)

@@ -81,6 +81,11 @@ FSM = function ()
         if current_state.keypressed then current_state.keypressed(key) end
     end
 
+    local textinput = function (key)
+        print("textinput")
+        if current_state.textinput then current_state.textinput(key) end
+    end
+
     local addState = function(state)
         states[state.name] = {
             name        = state.name,
@@ -88,6 +93,7 @@ FSM = function ()
             update      = state.update,
             draw        = state.draw,
             keypressed  = state.keypressed,
+            textinput   = state.textinput,
             transitions = {},
             variables   = {}
         }
@@ -124,6 +130,7 @@ FSM = function ()
         start         = start,
         update        = update,
         keypressed    = keypressed,
+        textinput     = textinput,
         draw          = draw,
         addState      = addState,
         addTransition = addTransition,

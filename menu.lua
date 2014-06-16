@@ -8,28 +8,35 @@ return function ()
     local showing       = false
     local hide_callback = function () end
     local cursor_pos    = 0
-    local arity         = "alone"
+    local choice         = "alone"
     local menu_index    = 0
     local time, flash   = 0, 0
 
     local inputs = {
         {   -- language_select
             clear      = function ()
-                arity      = "alone"
-                cursor_pos = 0
             end,
             keypressed = function (key)
-                if key == "up" or key == "down" then
-                    if arity == "alone" then
-                        arity = "together"
-                        cursor_pos = 30
-                    else
-                        arity = "alone"
-                        cursor_pos = 0
-                    end
-                end
+                choice = "alone"
+                cursor_pos = 0
             end
-        }
+        },
+        {   -- language_select
+            clear      = function ()
+            end,
+            keypressed = function (key)
+                choice = "together"
+                cursor_pos = 30
+            end
+        },
+        {   -- language_select
+            clear      = function ()
+            end,
+            keypressed = function (key)
+                choice = "gamejolt"
+                cursor_pos = 60
+            end
+        },
     }
 
     local drawCursor = function (x, y)
@@ -51,9 +58,10 @@ return function ()
 
     local title_part    = Component(0, 0, drawTitle)
     local subtitle_part = Component(0, 80, drawSubtitle)
-    local arity_part    = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 0, "ALONE"), Component(230, 30, "TOGETHER"))
+    local choice_part    = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 0, "ALONE"), Component(230, 30, "TOGETHER"))
+    local gamejolt_part = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 60, "GAMEJOLT"))
 
-    local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, arity_part)
+    local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, choice_part, gamejolt_part)
 
     local draw = function ()
         local r, g, b = love.graphics.getColor()
@@ -79,7 +87,7 @@ return function ()
     end
 
     local hide = function ()
-        if hide_callback then hide_callback({ arity = arity }) end
+        if hide_callback then hide_callback({ choice = choice }) end
         showing = false
     end
 
@@ -91,6 +99,14 @@ return function ()
         if key == "return" or key == " " then
             hide()
         end
+
+        if key == "up" then
+            menu_index = (menu_index - 1)%(#inputs)
+        elseif key == "down" then
+            menu_index = (menu_index + 1)%(#inputs)
+        end
+
+        print(menu_index)
 
         if inputs[menu_index + 1].keypressed then
             inputs[menu_index + 1].keypressed(key)

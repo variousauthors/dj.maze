@@ -1,12 +1,12 @@
 require "vector"
 
-local RED   = { 200, 200, 55 }
-local GREEN = { 55, 200, 55 }
-local rnd = love.math.newRandomGenerator(os.time())
+local YELLOW = { 200, 200, 55 }
+local GREEN  = { 55, 200, 55 }
+local rnd    = love.math.newRandomGenerator(os.time())
 
 Player = function (x, y, controls)
     local radius    = global.tile_size / 3
-    local color     = RED
+    local color     = YELLOW
     local p         = Point(x, y) -- pixels
     local message   = ""
     local score     = 0

@@ -31,12 +31,11 @@ NEXTSTEPS
 [ ] Add gamejolt API
 [ ] add the secret victory (achievement) for players who actually WIN vs AI
 
+[ ] clever music
+[ ] better sprites
 [ ] Deadly game mode, in which you brighten the path you take,
     so that there is an element of urgency. A player can't just trace
     her opponent.
-[ ] consider additional indicators for who is winning. Such as brightness
-[ ] clever music
-[ ] better sprites
 
 [ ] options to setup the controls
 

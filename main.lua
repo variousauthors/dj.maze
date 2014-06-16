@@ -9,6 +9,7 @@ require "maze"
 require "fsm"
 require "score_band"
 local Menu = require("menu")
+local GJMenu = require("gamejolt_menu")
 
 local i = require("vendor/inspect/inspect")
 inspect = function (a, b)
@@ -30,6 +31,7 @@ function love.load()
     score_band = ScoreBand()
     game       = Game()
     menu       = Menu()
+    gj_menu    = GJMenu()
 
     state_machine = FSM()
 
@@ -50,11 +52,7 @@ function love.load()
         name       = "start",
         init       = function ()
             menu.show(function (options)
-                if options.arity == menu.TOGETHER then
-                    game.playTogether()
-                else
-                    game.playAlone()
-                end
+                game.set(options.choice, true)
 
                 menu.reset()
             end)
@@ -68,6 +66,20 @@ function love.load()
             menu.keypressed(key)
         end,
         update     = menu.update
+    })
+
+    state_machine.addState({
+        name       = "gamejolt",
+        init       = function ()
+            game.set("gamejolt", nil)
+            gj_menu.show(function (options)
+                -- NOP
+            end)
+        end,
+        draw       = gj_menu.draw,
+        keypressed = gj_menu.keypressed,
+        update     = gj_menu.update,
+        textinput  = gj_menu.textinput
     })
     
     state_machine.addState({
@@ -148,7 +160,24 @@ function love.load()
                 game.playTogether()
             end
 
-            return not menu.isShowing()
+            return not menu.isShowing() and not game.get("gamejolt")
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "start",
+        to        = "gamejolt",
+        condition = function ()
+            return game.get("gamejolt")
+        end
+    })
+
+    state_machine.addTransition({
+        from      = "gamejolt",
+        to        = "start",
+        condition = function ()
+
+            return state_machine.isSet("escape") or not gj_menu.isShowing()
         end
     })
 
@@ -206,6 +235,7 @@ function love.load()
 
     love.update     = state_machine.update
     love.keypressed = state_machine.keypressed
+    love.textinput  = state_machine.textinput
     love.draw       = state_machine.draw
 
     state_machine.start()
