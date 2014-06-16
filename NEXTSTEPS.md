@@ -26,8 +26,7 @@ NEXTSTEPS
 [x] player 1's score should be on the bottom
 [x] "you win" should be replaced with "player2 wins" in multiplayer
 [x] add the lumines unit
-[ ] name entry for players (default "Red" vs "Green")
-[ ] implement token input for single player
+[x] implement token input for single player
 [ ] Add gamejolt API
 [ ] add the secret victory (achievement) for players who actually WIN vs AI
 

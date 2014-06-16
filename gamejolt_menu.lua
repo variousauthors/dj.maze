@@ -55,10 +55,12 @@ return function ()
         love.graphics.print(token .. icon, x, y)
     end
 
+    local talk1         = Component(0, 0, Component(0, 0, "GameJolt API integration"))
+    local talk          = Component(0, 30, Component(0, 0, "  Your unique high score is your win/loss ratio against the AI."))
     local username_part = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
     local token_part    = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
 
-    local component = Component(100, W_HEIGHT/2 - 200, username_part, token_part)
+    local component = Component(100, W_HEIGHT/2 - 200, talk1, talk, username_part, token_part)
 
     local draw = function ()
         component.draw(0, 0)
