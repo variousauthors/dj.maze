@@ -29,13 +29,14 @@ NEXTSTEPS
 [x] implement token input for single player
 [x] prepare gamejolt API
 [ ] Add gamejolt API
-[ ] Don't show the path in multiplayer until then end
+[x] Don't show the path in multiplayer until then end
 
 [x] Deadly game mode, in which you brighten the path you take,
     so that there is an element of urgency. A player can't just trace
     her opponent.
 [ ] Add a menu to use dynamic mode
 [ ] options to setup the controls
+[ ] consider moving the player2 tag to the player2 starting place (top left)
 
 [ ] clever music
 [ ] better sprites

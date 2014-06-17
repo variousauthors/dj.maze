@@ -66,7 +66,7 @@ ScoreBand = function ()
             diff = math.abs(diff - v.score)
         end
 
-        return lose .. " > " .. win .. " + " .. diff .. " lm"
+        return win .. " < " .. lose .. " - " .. diff .. " lm"
     end
 
     local draw = function ()

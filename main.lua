@@ -106,6 +106,12 @@ function love.load()
         name       = "win",
         init       = function ()
             local winner = game.getWinner()
+
+            if player2 then
+                player.setShowPath(true)
+                player2.setShowPath(true)
+            end
+
             -- TODO find a better way to incorporate the stripe
             --score_band.addStripe(winner.getColor())
 
