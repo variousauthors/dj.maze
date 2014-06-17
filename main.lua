@@ -110,7 +110,8 @@ function love.load()
             --score_band.addStripe(winner.getColor())
 
             -- talk to GameJolt
-            gj.add_score(1, 1)
+            diff = score_band.getDifference()
+            gj.add_score(diff, diff * 100)
 
             victory_message = winner.getMessage()
         end,
@@ -122,7 +123,7 @@ function love.load()
             player.updateScore(dt)
 
             if game.isAlone() then
-                results         = score_band.getDifference()
+                results         = score_band.getFormattedDiff()
             else
                 results         = score_band.getResults(winner, loser)
             end

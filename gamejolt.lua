@@ -78,6 +78,8 @@ GameJolt = function (game_id, private_key)
         if not authenticate() then return end
 
         print("UPLOADING SCORE...")
+        -- TODO get the player's current high score
+        -- update the average with the new score and sort
 
         return http_request({
             endpoint = "/scores/add/",

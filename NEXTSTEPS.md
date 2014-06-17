@@ -27,17 +27,20 @@ NEXTSTEPS
 [x] "you win" should be replaced with "player2 wins" in multiplayer
 [x] add the lumines unit
 [x] implement token input for single player
+[x] prepare gamejolt API
 [ ] Add gamejolt API
-[ ] add the secret victory (achievement) for players who actually WIN vs AI
+[ ] Don't show the path in multiplayer until then end
+
+[x] Deadly game mode, in which you brighten the path you take,
+    so that there is an element of urgency. A player can't just trace
+    her opponent.
+[ ] Add a menu to use dynamic mode
+[ ] options to setup the controls
 
 [ ] clever music
 [ ] better sprites
-[ ] Deadly game mode, in which you brighten the path you take,
-    so that there is an element of urgency. A player can't just trace
-    her opponent.
-
-[ ] options to setup the controls
+[ ] add the secret victory (achievement) for players who actually WIN vs AI
 
 BUG
-[ ] If the player backtracks and then shadows the opponent for the rest of the
+[x] If the player backtracks and then shadows the opponent for the rest of the
     game, they can win. This should be impossible: why isn't my AI backtracking?

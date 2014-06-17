@@ -36,7 +36,7 @@ Game = function ()
             down = "down", up = "up", left = "left", right = "right"
         })
 
-        player.setMessages({ "You Win!" })
+        player.setMessages({ "Perfect!" })
         maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
         if get("together") then
