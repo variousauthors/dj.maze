@@ -230,12 +230,14 @@ Maze = function (x, y, width, height)
         visited[1] = 1
 
         for i = 1, #adjacencies do
-            local v = nil
+            local v   = nil
+            local min = 1
 
             -- take the first unexplored node
             local j = 1
-            while (v == nil and j <= #adjacencies) do
-                if visited[j] == 0 and d[j] ~= nil then
+            while (j <= #adjacencies) do
+                if visited[j] == 0 and d[j] ~= nil and d[j] <= min then
+                    min = d[j]
                     v = j
                 end
                 j = j + 1

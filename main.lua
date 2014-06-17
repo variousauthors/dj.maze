@@ -56,7 +56,7 @@ function love.load()
 
             menu.show(function (options)
                 game.set(options.arity, true)
-                game.set(options.mode, true)
+                --game.set(options.mode, true)
 
                 menu.reset()
             end)
