@@ -46,7 +46,11 @@ ScoreBand = function ()
             diff = math.abs(diff - v.score)
         end
 
-        return "|p1 - p2| < " .. diff .. " lm"
+        return diff
+    end
+
+    local getFormattedDiff = function ()
+        return "|p1 - p2| < " .. getDifference() .. " lm"
     end
 
     local getResults = function (winner, loser)
@@ -118,13 +122,14 @@ ScoreBand = function ()
     end
 
     return {
-        draw            = draw,
-        addStripe       = addStripe,
-        getScoreUpdater = getScoreUpdater,
-        register        = register,
-        getResults      = getResults,
-        getDifference   = getDifference,
-        setNotice       = setNotice,
-        clear           = clear
+        draw             = draw,
+        addStripe        = addStripe,
+        getScoreUpdater  = getScoreUpdater,
+        register         = register,
+        getResults       = getResults,
+        getDifference    = getDifference,
+        getFormattedDiff = getFormattedDiff,
+        setNotice        = setNotice,
+        clear            = clear
     }
 end
