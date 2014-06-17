@@ -54,11 +54,6 @@ Maze = function (x, y, width, height)
     local setWeight = function (x, y, weight)
         local col, row = getTileX(x), getTileY(y)
 
-        print("===")
-        inspect({ col, row })
-        inspect({ width - col + 1, row })
-        inspect({ col, height - row + 1 })
-        inspect({ width - col + 1, height - row + 1 })
         structure[row][col]                          = math.min(weight, 1)
         structure[height - row + 1][col]             = math.min(weight, 1)
         structure[row][width - col + 1]              = math.min(weight, 1)
@@ -231,7 +226,7 @@ Maze = function (x, y, width, height)
 
         for i = 1, #adjacencies do
             local v   = nil
-            local min = 1
+            local min = width + 1 -- the longest possible path
 
             -- take the first unexplored node
             local j = 1
@@ -308,8 +303,6 @@ Maze = function (x, y, width, height)
         for i = 1, height do
             structure[i] = {}
 
-            -- try weight inversely proportional to
-            -- product of indices
             for j = 1, width do
                 local n = rng:random()
 
