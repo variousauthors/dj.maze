@@ -18,6 +18,10 @@ GameJolt = function (game_id, private_key)
     end
 
     local http_request = function ( args )
+        if private_key == nil then
+            print("ALERT: private key is nil")
+            return { response = nil }
+        end
         local resp, r = {}, {}
         if args.endpoint then
             local params = ""
@@ -47,6 +51,7 @@ GameJolt = function (game_id, private_key)
 
     local authenticate = function ()
         print("AUTHENTICATING WITH GAMEJOLT")
+        local result = ""
         local response = http_request({
             endpoint = "/users/auth/",
             params   = {
@@ -56,10 +61,14 @@ GameJolt = function (game_id, private_key)
             }
         }).response
 
-        local result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
+        if response ~= nil then
+            local result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
 
-        if result then
-            print("  YEAH, YOU'RE GOOD")
+            if result then
+                print("  YEAH, YOU'RE GOOD")
+            end
+        else
+            print("AUTHENTICATION FAILED")
         end
 
         return result

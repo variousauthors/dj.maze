@@ -8,6 +8,8 @@ require "game"
 require "maze"
 require "fsm"
 require "score_band"
+require "gamejolt"
+
 local Menu = require("menu")
 local GJMenu = require("gamejolt_menu")
 
@@ -32,6 +34,7 @@ function love.load()
     game       = Game()
     menu       = Menu()
     gj_menu    = GJMenu()
+    gj         = GameJolt("1", nil)
 
     state_machine = FSM()
 
@@ -48,6 +51,8 @@ function love.load()
         keypressed = game.keypressed
     })
 
+    local profile = nil
+
     state_machine.addState({
         name       = "start",
         init       = function ()
@@ -55,6 +60,12 @@ function love.load()
             game.set("dynamic", nil)
 
             menu.show(function (options)
+                profile = gj_menu.recoverProfile()
+
+                if profile then
+                    gj.connect_user(profile.username, profile.token)
+                end
+
                 game.set(options.arity, true)
                 --game.set(options.mode, true)
 
@@ -77,6 +88,11 @@ function love.load()
         init       = function ()
             game.set("gamejolt", nil)
             gj_menu.show(function (options)
+                profile = gj_menu.recoverProfile()
+
+                if profile then
+                    gj.connect_user(profile.username, profile.token)
+                end
                 -- NOP
             end)
         end,
@@ -85,13 +101,16 @@ function love.load()
         update     = gj_menu.update,
         textinput  = gj_menu.textinput
     })
-    
+
     state_machine.addState({
         name       = "win",
         init       = function ()
             local winner = game.getWinner()
             -- TODO find a better way to incorporate the stripe
             --score_band.addStripe(winner.getColor())
+
+            -- talk to GameJolt
+            gj.add_score(1, 1)
 
             victory_message = winner.getMessage()
         end,
@@ -101,7 +120,7 @@ function love.load()
 
             game.updateScore(dt)
             player.updateScore(dt)
-            
+
             if game.isAlone() then
                 results         = score_band.getDifference()
             else
