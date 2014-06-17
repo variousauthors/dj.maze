@@ -47,6 +47,8 @@ Game = function ()
             player2.setName("player2")
             player2.setMessages({ player2.getName() .. " Wins!" })
             player.setMessages({ player.getName() .. " Wins!" })
+            player.setShowPath(false)
+            player2.setShowPath(false)
             maze.setEnemy(player2)
         end
 

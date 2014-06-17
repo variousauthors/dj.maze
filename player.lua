@@ -12,6 +12,7 @@ Player = function (x, y, controls)
     local score     = 0
     local name      = "player1"
     local messager  = Messager()
+    local show_path = true
     local echo_path = love.graphics.newCanvas()
 
     local getEcho = function ()
@@ -38,7 +39,7 @@ Player = function (x, y, controls)
     end
 
     local draw = function ()
-        if love.graphics.isSupported("npot") then
+        if love.graphics.isSupported("npot") and show_path then
             love.graphics.draw(echo_path)
         end
 
@@ -92,6 +93,10 @@ Player = function (x, y, controls)
         return name
     end
 
+    local setShowPath = function (value)
+        show_path = value
+    end
+
     return {
         getX           = p.getX,
         getY           = p.getY,
@@ -100,6 +105,7 @@ Player = function (x, y, controls)
         setColor       = setColor,
         getColor       = getColor,
         setMessages    = messager.setMessages,
+        setShowPath    = setShowPath,
         getMessage     = getMessage,
         incrementScore = incrementScore,
         getScore       = getScore,
