@@ -91,18 +91,30 @@ return function ()
         end
     end
 
-    local talk1         = Component(0, -120, Component(0, 0, "Multiplayer Mode"))
-    local mode_part     = Component(0, -90, Component(60, 0, drawMode))
-    local mode_blurb    = Component(0, -60, Component(60, 0, drawModeBlurb))
-    local talk2         = Component(0, 0, Component(0, 0, "GameJolt API integration"))
-    local talk3         = Component(0, 30, Component(60, 0, "Your unique high score is the\naverage of your success against\nthe AI."))
-    local username_part = Component(0, 120, Component(60, 0, "USERNAME"), Component(180, 0, drawUsername))
-    local token_part    = Component(0, 150, Component(60, 0, "TOKEN"), Component(180, 0, drawToken))
+    local drawSubtitle = function (x, y)
+        love.graphics.setFont(SCORE_FONT)
+        love.graphics.printf("find the darkest path to the center", x, y, 576, "right")
+    end
 
-    local component = Component(100, W_HEIGHT/2 - 200, talk1, mode_part, mode_blurb, talk2, talk3, username_part, token_part)
+    local drawTitle = function (x, y)
+        love.graphics.setFont(SPACE_FONT)
+        love.graphics.print("DARKEST PATH", x, y)
+    end
+
+    local title_part    = Component(0, 0, drawTitle)
+    local subtitle_part = Component(0, 80, drawSubtitle)
+    local talk1         = Component(30, 140, Component(0, 0, "Multiplayer Mode"))
+    local mode_part     = Component(30, 170, Component(60, 0, drawMode))
+    local mode_blurb    = Component(30, 200, Component(60, 0, drawModeBlurb))
+    local talk2         = Component(30, 260, Component(0, 0, "GameJolt API integration"))
+    local talk3         = Component(30, 290, Component(60, 0, "Your unique high score is the\naverage of your success against\nthe AI."))
+    local username_part = Component(30, 380, Component(60, 0, "USERNAME"), Component(180, 0, drawUsername))
+    local token_part    = Component(30, 410, Component(60, 0, "TOKEN"), Component(180, 0, drawToken))
+
+    local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, talk1, mode_part, mode_blurb, talk2, talk3, username_part, token_part)
 
     local draw = function ()
-        component.draw(0, 30)
+        component.draw(0, 0)
     end
 
     local update = function (dt)
