@@ -10,8 +10,8 @@ require "fsm"
 require "score_band"
 require "gamejolt"
 
-local Menu = require("menu")
-local GJMenu = require("gamejolt_menu")
+local Menu         = require("menu")
+local SettingsMenu = require("settings_menu")
 
 local i = require("vendor/inspect/inspect")
 inspect = function (a, b)
@@ -31,10 +31,10 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
 
     score_band = ScoreBand()
-    game       = Game()
-    menu       = Menu()
-    gj_menu    = GJMenu()
-    gj         = GameJolt("1", nil)
+    game          = Game()
+    menu          = Menu()
+    settings_menu = SettingsMenu()
+    gj            = GameJolt("1", nil)
 
     state_machine = FSM()
 
@@ -60,7 +60,7 @@ function love.load()
             game.set("dynamic", nil)
 
             menu.show(function (options)
-                profile = gj_menu.recoverProfile()
+                profile = settings_menu.recoverProfile()
 
                 if profile then
                     gj.connect_user(profile.username, profile.token)
@@ -84,11 +84,12 @@ function love.load()
     })
 
     state_machine.addState({
-        name       = "gamejolt",
+        name       = "settings",
         init       = function ()
-            game.set("gamejolt", nil)
-            gj_menu.show(function (options)
-                profile = gj_menu.recoverProfile()
+            game.set("settings", nil)
+            settings_menu.show(function (options)
+                profile = settings_menu.recoverProfile()
+                game.set(options.mode, true)
 
                 if profile then
                     gj.connect_user(profile.username, profile.token)
@@ -96,10 +97,10 @@ function love.load()
                 -- NOP
             end)
         end,
-        draw       = gj_menu.draw,
-        keypressed = gj_menu.keypressed,
-        update     = gj_menu.update,
-        textinput  = gj_menu.textinput
+        draw       = settings_menu.draw,
+        keypressed = settings_menu.keypressed,
+        update     = settings_menu.update,
+        textinput  = settings_menu.textinput
     })
 
     state_machine.addState({
@@ -186,24 +187,24 @@ function love.load()
         from      = "start",
         to        = "run",
         condition = function ()
-            return not menu.isShowing() and not game.get("gamejolt")
+            return not menu.isShowing() and not game.get("settings")
         end
     })
 
     state_machine.addTransition({
         from      = "start",
-        to        = "gamejolt",
+        to        = "settings",
         condition = function ()
-            return game.get("gamejolt")
+            return game.get("settings")
         end
     })
 
     state_machine.addTransition({
-        from      = "gamejolt",
+        from      = "settings",
         to        = "start",
         condition = function ()
 
-            return state_machine.isSet("escape") or not gj_menu.isShowing()
+            return state_machine.isSet("escape") or not settings_menu.isShowing()
         end
     })
 

@@ -34,8 +34,8 @@ return function ()
             clear      = function ()
             end,
             keypressed = function (key)
-                choice = "gamejolt"
-                cursor_pos = 60
+                choice = "settings"
+                cursor_pos = 90
             end
         },
     }
@@ -59,10 +59,10 @@ return function ()
 
     local title_part    = Component(0, 0, drawTitle)
     local subtitle_part = Component(0, 80, drawSubtitle)
-    local choice_part    = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 0, "ALONE"), Component(230, 30, "TOGETHER"))
-    local gamejolt_part = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 60, "GAMEJOLT"))
+    local choice_part   = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 0, "ALONE"), Component(230, 30, "TOGETHER"))
+    local settings      = Component(0, 200, Component(0, 0, ""), Component(200, 0, drawCursor), Component(230, 90, "SETTINGS"))
 
-    local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, choice_part, gamejolt_part)
+    local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, choice_part, settings)
 
     local draw = function ()
         local r, g, b = love.graphics.getColor()

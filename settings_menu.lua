@@ -1,7 +1,8 @@
 local Component = require("component")
 
-USERNAME = 0
-TOKEN    = 1
+MODE     = 0
+USERNAME = 1
+TOKEN    = 2
 
 return function ()
     local showing       = false
@@ -10,9 +11,23 @@ return function ()
     local menu_index    = 0
     local username      = ""
     local token         = ""
+    local mode          = "STATIC"
     local time, flash   = 0, 0
 
     local inputs = {
+        {   -- token
+            clear      = function ()
+            end,
+            keypressed = function (key)
+                if key == "left" or key == "right" then
+                    if mode == "DYNAMIC" then
+                        mode = "STATIC"
+                    else
+                        mode = "DYNAMIC"
+                    end
+                end
+            end
+        },
         {   -- username
             clear      = function ()
                 username = ""
@@ -55,15 +70,39 @@ return function ()
         love.graphics.print(token .. icon, x, y)
     end
 
-    local talk1         = Component(0, 0, Component(0, 0, "GameJolt API integration"))
-    local talk          = Component(0, 30, Component(0, 0, "  Your unique high score is your win/loss ratio against the AI."))
-    local username_part = Component(0, 100, Component(0, 0, "USERNAME"), Component(200, 0, drawUsername))
-    local token_part    = Component(0, 200, Component(0, 0, "   TOKEN"), Component(200, 0, drawToken))
+    local drawMode = function (x, y)
+        local left_icon  = ""
+        local right_icon = ""
 
-    local component = Component(100, W_HEIGHT/2 - 200, talk1, talk, username_part, token_part)
+        if menu_index == MODE then
+            left_icon  = "< "
+            right_icon = " >"
+        end
+
+        drawCursor(x, y)
+        love.graphics.print(left_icon .. mode .. right_icon, x, y)
+    end
+
+    local drawModeBlurb = function (x, y)
+        if mode == "STATIC" then
+            love.graphics.print("Think carefully about every move", x, y)
+        else
+            love.graphics.print("The path you choose will get brighter,\ngiving the fastest player an advantage", x, y)
+        end
+    end
+
+    local talk1         = Component(0, -120, Component(0, 0, "Multiplayer Mode"))
+    local mode_part     = Component(0, -90, Component(60, 0, drawMode))
+    local mode_blurb    = Component(0, -60, Component(60, 0, drawModeBlurb))
+    local talk2         = Component(0, 0, Component(0, 0, "GameJolt API integration"))
+    local talk3         = Component(0, 30, Component(60, 0, "Your unique high score is the\naverage of your success against\nthe AI."))
+    local username_part = Component(0, 120, Component(60, 0, "USERNAME"), Component(180, 0, drawUsername))
+    local token_part    = Component(0, 150, Component(60, 0, "TOKEN"), Component(180, 0, drawToken))
+
+    local component = Component(100, W_HEIGHT/2 - 200, talk1, mode_part, mode_blurb, talk2, talk3, username_part, token_part)
 
     local draw = function ()
-        component.draw(0, 0)
+        component.draw(0, 30)
     end
 
     local update = function (dt)
@@ -103,7 +142,7 @@ return function ()
     end
 
     local hide = function ()
-        hide_callback({ })
+        hide_callback({ mode = mode })
         showing = false
     end
 

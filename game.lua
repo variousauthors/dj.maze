@@ -52,7 +52,7 @@ Game = function ()
             maze.setEnemy(player2)
         end
 
-        if get("dynamic") then
+        if get("DYNAMIC") then
             maze.dynamicMode(true)
         end
 
