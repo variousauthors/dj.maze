@@ -82,7 +82,6 @@ FSM = function ()
     end
 
     local textinput = function (key)
-        print("textinput")
         if current_state.textinput then current_state.textinput(key) end
     end
 
