@@ -107,8 +107,6 @@ return function ()
             menu_index = (menu_index + 1)%(#inputs)
         end
 
-        print(menu_index)
-
         if inputs[menu_index + 1].keypressed then
             inputs[menu_index + 1].keypressed(key)
         end
