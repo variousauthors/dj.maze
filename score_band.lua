@@ -76,14 +76,25 @@ ScoreBand = function ()
             local offset = 0
             local r, g, b = love.graphics.getColor()
             local offset_x = 0
-            local text_offset_x = - global.map_width / 2 + global.tile_size / 2
-            local text_offset_y = global.map_height + 2.5*global.tile_size
+            local score_x, score_y
+            local name_x, name_y
+            local name_align
 
             --stripe_width = 20*v.score
 
             if k.getName() == "player2" then
                 --offset_x    = -stripe_width
-                text_offset_y = global.tile_size * 1.5
+                score_x = global.tile_size * 2
+                score_y = global.tile_size * 1.5
+                name_x = - global.map_width / 2 + global.tile_size / 2
+                name_y = score_y
+                name_align = "left"
+            else
+                score_x = - global.map_width / 2 + global.tile_size / 2
+                score_y = global.map_height + 2.5*global.tile_size
+                name_x = score_x
+                name_y = score_y
+                name_align = "right"
             end
 
             --love.graphics.setColor(v.color)
@@ -91,20 +102,20 @@ ScoreBand = function ()
 
             love.graphics.setColor(255, 255, 255)
             love.graphics.setFont(SCORE_FONT)
-            love.graphics.printf(v.score .. " lm", center_line + text_offset_x, text_offset_y, W_WIDTH / 2, "left")
+            love.graphics.printf(v.score .. " lm", center_line + score_x, score_y, W_WIDTH / 2, "left")
 
             -- TODO this is dumb. Sometimes k is a player, sometimes it is a maze object.
             -- it should just always be a player
             if k.isMaze then
                 if k.playTogether() then
-                    love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                    love.graphics.printf(k.getName(), center_line + name_x, name_y, W_WIDTH / 2 + 75, name_align)
                 else
                     if math.floor(timer)%2 == 0 then
-                        love.graphics.printf(notice[k.getName()], center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                        love.graphics.printf(notice[k.getName()], center_line + name_x, name_y, W_WIDTH / 2 + 75, name_align)
                     end
                 end
             else
-                love.graphics.printf(k.getName(), center_line + text_offset_x, text_offset_y, W_WIDTH / 2 + 75, "right")
+                love.graphics.printf(k.getName(), center_line + name_x, name_y, W_WIDTH / 2 + 75, name_align)
             end
         end
 

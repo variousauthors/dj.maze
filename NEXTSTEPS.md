@@ -40,12 +40,14 @@ NEXTSTEPS
       follow a yellow line across a maze. Whatever keys the player uses
       to run the maze, those become their controls. Maybe later, eh?
     - for now provide a config file
-[ ] consider moving the player2 tag to the player2 starting place (top left)
-[ ] the victory in multiplayer should be "YELLOW WINS" vs "GREEN WINS" instead of P1 P2
+[x] consider moving the player2 tag to the player2 starting place (top left)
+    - this means the player will see their label abobve their starting location
+[x] the victory in multiplayer should be "YELLOW WINS" vs "GREEN WINS" instead of P1 P2
 
 [ ] clever music
 [ ] better sprites
 [ ] add the secret victory (achievement) for players who actually WIN vs AI
+[ ] Add tug-o-war style score long-term board
 
 BUG
 [x] If the player backtracks and then shadows the opponent for the rest of the
@@ -62,3 +64,4 @@ TIM
 [ ] A mode where, if you make a bunch of perfect moves you get a power
     up that lets you attack the other player somehow.
     - or improve your powers. Like a score multiplier.
+[ ] in polychrome mode, the players should be black and white
