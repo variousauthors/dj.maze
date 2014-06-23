@@ -1,6 +1,7 @@
 
 Game = function ()
-    local score     = 0
+    local score = 0
+    local timer = 0
     local variables = {}
 
     local set = function (key, value)
@@ -73,23 +74,32 @@ Game = function ()
 
     local keypressed = function (key)
         if get("together") and player2.isControl(key) then
-            if (player2) then
+            if not player2.isLocked() then
                 maze.keypressed(key, player2)
             end
         end
 
-        if player.isControl(key) then
+        if player.isControl(key) and not player.isLocked() then
             maze.keypressed(key, player)
         end
     end
 
     local update = function (dt)
+        timer = timer + dt
+
+        if timer > 0.1 then
+            timer = 0
+        end
         maze.updateScore(dt)
         player.updateScore(dt)
 
         if gameIsPaused then return end
 
         love.audio.update()
+
+        if player.isLocked() and not get("together") and timer == 0 then
+            maze.keypressed("", player)
+        end
 
         maze.update(dt)
     end

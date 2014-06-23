@@ -41,6 +41,7 @@ NEXTSTEPS
       to run the maze, those become their controls. Maybe later, eh?
     - for now provide a config file
 [ ] consider moving the player2 tag to the player2 starting place (top left)
+[ ] the victory in multiplayer should be "YELLOW WINS" vs "GREEN WINS" instead of P1 P2
 
 [ ] clever music
 [ ] better sprites
@@ -49,7 +50,7 @@ NEXTSTEPS
 BUG
 [x] If the player backtracks and then shadows the opponent for the rest of the
     game, they can win. This should be impossible: why isn't my AI backtracking?
-[ ] The player that gets there first should be frozen, and the AI should then
+[x] The player that gets there first should be frozen, and the AI should then
     move on a beat
 
 TIM
