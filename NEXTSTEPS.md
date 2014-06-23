@@ -34,8 +34,12 @@ NEXTSTEPS
 [x] Deadly game mode, in which you brighten the path you take,
     so that there is an element of urgency. A player can't just trace
     her opponent.
-[ ] Add a menu to use dynamic mode
+[x] Add a menu to use dynamic mode
 [ ] options to setup the controls
+    - the idea I had was, go into a mini game mode where the player must
+      follow a yellow line across a maze. Whatever keys the player uses
+      to run the maze, those become their controls. Maybe later, eh?
+    - for now provide a config file
 [ ] consider moving the player2 tag to the player2 starting place (top left)
 
 [ ] clever music
@@ -45,3 +49,15 @@ NEXTSTEPS
 BUG
 [x] If the player backtracks and then shadows the opponent for the rest of the
     game, they can win. This should be impossible: why isn't my AI backtracking?
+[ ] The player that gets there first should be frozen, and the AI should then
+    move on a beat
+
+TIM
+[ ] consider making it the "redest path" rather than the darkest path
+    or choose one of R G B to be the "bad" colour. This could be like
+    "hard mode"
+    - you could also choose having both R and G, where R is bad, or
+      all three, or just one. Combinatorics!
+[ ] A mode where, if you make a bunch of perfect moves you get a power
+    up that lets you attack the other player somehow.
+    - or improve your powers. Like a score multiplier.
