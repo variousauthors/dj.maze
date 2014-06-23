@@ -101,15 +101,17 @@ return function ()
         love.graphics.print("DARKEST PATH", x, y)
     end
 
+    -- TODO redo this with proper nesting. SUCK GOAT.
     local title_part    = Component(0, 0, drawTitle)
     local subtitle_part = Component(0, 80, drawSubtitle)
     local talk1         = Component(30, 140, Component(0, 0, "Multiplayer Mode"))
     local mode_part     = Component(30, 170, Component(60, 0, drawMode))
     local mode_blurb    = Component(30, 200, Component(60, 0, drawModeBlurb))
     local talk2         = Component(30, 260, Component(0, 0, "GameJolt API integration"))
-    local talk3         = Component(30, 290, Component(60, 0, "Your unique high score is the\naverage of your success against\nthe AI."))
-    local username_part = Component(30, 380, Component(60, 0, "USERNAME"), Component(180, 0, drawUsername))
-    local token_part    = Component(30, 410, Component(60, 0, "TOKEN"), Component(180, 0, drawToken))
+    local talk3         = Component(30, 290, Component(60, 0, "Battle the AI to improve your rank!"))
+    local username_part = Component(30, 350, Component(60, 0, "USERNAME"), Component(180, 0, drawUsername))
+    local token_part    = Component(30, 380, Component(60, 0, "TOKEN"), Component(180, 0, drawToken))
+    local controls_part = Component(30, 440, Component(0, 0, "Controls: to customize the controls, modify controls.lua"), Component(180, 0, drawToken))
 
     local component = Component(100, W_HEIGHT/2 - 200, title_part, subtitle_part, talk1, mode_part, mode_blurb, talk2, talk3, username_part, token_part)
 

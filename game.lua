@@ -32,17 +32,13 @@ Game = function ()
 
     local init = function (score_band)
         maze   = Maze(origin.getX(), origin.getY(), maze_d, maze_d)
-        player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2), {
-            down = "down", up = "up", left = "left", right = "right"
-        })
+        player = Player(maze.getPixelX((maze_d - 1) * 2), maze.getPixelY((maze_d - 1) * 2), require("controls").player1)
 
         player.setMessages({ "Perfect!" })
         maze.setMessages({ "So Close!", "Keep Trying!", "Almost!", "Nice Try!", "Oh No!", "Close One", "Oops" })
 
         if get("together") then
-            player2 = Player(maze.getPixelX(0), maze.getPixelY(0), {
-                down = "s", up = "w", left = "a", right = "d"
-            })
+            player2 = Player(maze.getPixelX(0), maze.getPixelY(0), require("controls").player2)
             player2.setColor(GREEN)
             player2.setName("player2")
             player2.setMessages({ player2.getName() .. " Wins!" })
