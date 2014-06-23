@@ -5,16 +5,17 @@ local GREEN  = { 55, 200, 55 }
 local rnd    = love.math.newRandomGenerator(os.time())
 
 Player = function (x, y, controls)
-    local radius    = global.tile_size / 3
-    local color     = YELLOW
-    local p         = Point(x, y) -- pixels
-    local message   = ""
-    local score     = 0
-    local name      = "player1"
-    local messager  = Messager()
-    local show_path = true
-    local echo_path = love.graphics.newCanvas()
-    local locked    = false
+    local radius     = global.tile_size / 3
+    local color      = YELLOW
+    local p          = Point(x, y) -- pixels
+    local message    = ""
+    local score      = 0
+    local name       = "player1"
+    local color_name = "Yellow"
+    local messager   = Messager()
+    local show_path  = true
+    local echo_path  = love.graphics.newCanvas()
+    local locked     = false
     local _keypressed
 
     local getEcho = function ()
@@ -108,6 +109,14 @@ Player = function (x, y, controls)
         return name
     end
 
+    local setColorName = function (name)
+        color_name = name
+    end
+
+    local getColorName = function ()
+        return color_name
+    end
+
     local setShowPath = function (value)
         show_path = value
     end
@@ -126,6 +135,8 @@ Player = function (x, y, controls)
         getScore       = getScore,
         setName        = setName,
         getName        = getName,
+        setColorName   = setColorName,
+        getColorName   = getColorName,
         update         = update,
         draw           = draw,
         keypressed     = keypressed,
@@ -151,6 +162,7 @@ Enemy = function (x, y)
 
     player.setColor(GREEN)
     player.setName("player2")
+    player.setColorName("Green")
 
     -- read the move list in reverse
     player.getNextMove = function ()

@@ -248,7 +248,7 @@ function love.load()
         from      = "new_challenger",
         to        = "run",
         condition = function ()
-            return timer > 3
+            return timer > 1.5
         end
     })
 
