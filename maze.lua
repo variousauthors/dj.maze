@@ -68,20 +68,22 @@ Maze = function (x, y, width, height)
 
         player.keypressed(key)
 
-        if offset_x > player.getX() or player.getX() > pixel_width              then moved = false
-        elseif offset_y > player.getY() or player.getY() > pixel_height         then moved = false
+        if     offset_x > player.getX() or player.getX() > pixel_width  then moved = false
+        elseif offset_y > player.getY() or player.getY() > pixel_height then moved = false
         end
 
         if moved == false then
             player.setX(old_x)
             player.setY(old_y)
         else
-            local old_weight = getWeight(old_x, old_y)
-            player.incrementScore(getWeight(player.getX(), player.getY()))
-            if dynamic_mode == true then
-                setWeight(old_x, old_y, old_weight * 2)
+            if not player.isLocked() then
+                local old_weight = getWeight(old_x, old_y)
+                player.incrementScore(getWeight(player.getX(), player.getY()))
+                if dynamic_mode == true then
+                    setWeight(old_x, old_y, old_weight * 2)
+                end
+                player.updateEcho(old_x, old_y)
             end
-            player.updateEcho(old_x, old_y)
         end
 
         return moved
@@ -166,9 +168,15 @@ Maze = function (x, y, width, height)
         local goal_y = goal.getY() * global.tile_size + offset_y
 
         if player.getX() == goal_x and player.getY() == goal_y then
+            player.lockControls()
+
             if enemy.getX() == goal_x and enemy.getY() == goal_y then
                 winner = chooseWinner()
             end
+        end
+
+        if enemy.getX() == goal_x and enemy.getY() == goal_y then
+            enemy.lockControls()
         end
     end
 

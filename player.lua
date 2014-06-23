@@ -14,12 +14,15 @@ Player = function (x, y, controls)
     local messager  = Messager()
     local show_path = true
     local echo_path = love.graphics.newCanvas()
+    local locked    = false
+    local _keypressed
 
     local getEcho = function ()
         return echo_path
     end
 
     local keypressed = function (key)
+        if locked then return false end
         local did_move = true
 
         if     key == controls.down  then p.setY(p.getY() + global.tile_size)
@@ -77,6 +80,18 @@ Player = function (x, y, controls)
         end
     end
 
+    local lockControls = function ()
+        locked = true
+    end
+
+    local unlockControls = function ()
+        locked = false
+    end
+
+    local isLocked = function ()
+        return locked
+    end
+
     local incrementScore = function (inc)
         score = score + inc
     end
@@ -115,7 +130,10 @@ Player = function (x, y, controls)
         draw           = draw,
         keypressed     = keypressed,
         isControl      = isControl,
-        updateEcho     = updateEcho
+        updateEcho     = updateEcho,
+        lockControls   = lockControls,
+        unlockControls = unlockControls,
+        isLocked       = isLocked
     }
 end
 
