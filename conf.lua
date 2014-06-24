@@ -1,5 +1,7 @@
 -- globals having to do with the tile library
-global               = {}
+global = {}
+global.tile_size = 16
+global.scale = 1
 
 function DEC_HEX(IN)
     local B,K,OUT,I,D=16,"0123456789abcdef","",0
@@ -11,8 +13,8 @@ function DEC_HEX(IN)
     return OUT
 end
 
-sides = { 1005366685, 1351747387, 3316243027, 930149632 }
-floor_height = 27754
+sides = { 57903887872, 1072179291, 2246282408, 102417611 }
+floor_height = 28675
 
 global.side_length   = ""
 global.floor_height  = "" .. floor_height
