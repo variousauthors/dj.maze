@@ -74,78 +74,34 @@ GameJolt = function (game_id, private_key)
         return result
     end
 
-    local addScore = function (score, sort, games)
+    local add_score = function (score, sort)
         if not authenticate() then return end
 
         print("UPLOADING SCORE...")
+        -- TODO get the player's current high score
+        -- update the average with the new score and sort
 
-        local response = http_request({
+        return http_request({
             endpoint = "/scores/add/",
             params   = {
                 game_id    = game_id,
                 username   = username,
                 user_token = user_token,
                 score      = urlencode(score),
-                sort       = sort,
-                extra_data = games
+                sort       = sort
             }
-        }).response
-
-
-        if response ~= nil then
-            local result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
-
-            if result then
-                print("  YEAH, YOU'RE GOOD")
-            else
-                inspect(response)
-            end
-        else
-            print("AUTHENTICATION FAILED")
-        end
+        })
     end
 
-    local fetchScore = function ()
-        if not authenticate() then return end
-
-        local score, games = nil, nil
-
-        print("FETCHING SCORE...")
-
-        local response = http_request({
-            endpoint = "/scores/",
-            params   = {
-                game_id    = game_id,
-                username   = username,
-                user_token = user_token
-            }
-        }).response
-
-        if response ~= nil then
-            result = string.find(unpack(response), 'success:"true"') -- TODO ha ha ha, until I find a JSON parser I like
-
-            if result then
-                print("  YEAH, YOU'RE GOOD")
-                score = string.match(unpack(response), 'score:"(.-)"') -- TODO ha ha ha, until I find a JSON parser I like
-                games = string.match(unpack(response), 'extra_data:"(.-)"') -- TODO ha ha ha, until I find a JSON parser I like
-            end
-        else
-            print("AUTHENTICATION FAILED")
-        end
-
-        return score, games
-    end
-
-    local connectUser = function (name, token)
+    local connect_user = function (name, token)
         username   = name
         user_token = token
     end
 
     return {
         http_request = http_request,
-        connectUser  = connectUser,
-        fetchScore   = fetchScore,
-        addScore    = addScore
+        connect_user = connect_user,
+        add_score    = add_score
     }
 end
 

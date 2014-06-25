@@ -1,3 +1,7 @@
+global = {}
+global.tile_size = 16
+global.scale = 1
+
 require "player"
 require "audio"
 require "game"
@@ -30,7 +34,7 @@ function love.load()
     game          = Game()
     menu          = Menu()
     settings_menu = SettingsMenu()
-    gj            = GameJolt(global.floor_height, global.side_length)
+    gj            = GameJolt("1", nil)
 
     state_machine = FSM()
 
@@ -59,8 +63,7 @@ function love.load()
                 profile = settings_menu.recoverProfile()
 
                 if profile then
-                    gj.connectUser(profile.username, profile.token)
-                    gj.score, gj.games = gj.fetchScore()
+                    gj.connect_user(profile.username, profile.token)
                 end
 
                 game.set(options.arity, true)
@@ -89,8 +92,7 @@ function love.load()
                 game.set(options.mode, true)
 
                 if profile then
-                    gj.connectUser(profile.username, profile.token)
-                    gj.score, gj.games = gj.fetchScore()
+                    gj.connect_user(profile.username, profile.token)
                 end
                 -- NOP
             end)
@@ -109,23 +111,14 @@ function love.load()
             if player2 then
                 player.setShowPath(true)
                 player2.setShowPath(true)
-            else
-                -- TODO find a better way to incorporate the stripe
-                --score_band.addStripe(winner.getColor())
-
-                -- talk to GameJolt
-                diff = score_band.getDifference()
-
-                if gj.score == nil then
-                    gj.score = diff
-                    gj.games = 1
-                    gj.addScore(score, score, 1)
-                else
-                    gj.score = (gj.games*gj.score + diff)/(gj.games + 1)
-                    gj.games = gj.games + 1
-                    gj.addScore(gj.score, gj.score, gj.games)
-                end
             end
+
+            -- TODO find a better way to incorporate the stripe
+            --score_band.addStripe(winner.getColor())
+
+            -- talk to GameJolt
+            diff = score_band.getDifference()
+            gj.add_score(diff, diff * 100)
 
             victory_message = winner.getMessage()
         end,
